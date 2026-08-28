@@ -90,4 +90,17 @@ digitoDecenas x = digitoUnidades (div x 10)
   =========================================
 -}
 
-      
+estanRelacionados :: Integer -> Integer -> Bool
+estanRelacionados a b | a == 0 || b == 0   = False 
+                      | (-a) `mod` b == 0  = True
+                      | otherwise          = False
+
+{-
+  =========================================
+  EJERCICIO 4
+  =========================================
+-}
+
+-- (a)
+productoInterno:: (Float,Float) -> (Float,Float) -> Float
+productoInterno (x,y) (z,k) = x*z + y*k
