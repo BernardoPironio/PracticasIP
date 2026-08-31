@@ -127,9 +127,9 @@ sumarSoloMultiplos (x, y, z) k = filtrar x + filtrar y + filtrar z
 -- (f)
 posPrimerPar:: (Integer,Integer,Integer) -> Integer
 posPrimerPar (x,y,z)  | par x && par y && par z = 4
-                      | par x                   = 0
-                      | par y                   = 1
-                      | par z                   = 2
+                      | par x                   = 1
+                      | par y                   = 2
+                      | par z                   = 3
   where 
     par n | mod n 2 == 0 = True
           | otherwise    = False
@@ -170,8 +170,8 @@ type EsBisiesto = Bool
 
 
 bisiesto:: Anio -> EsBisiesto
-bisiesto x | mod x 4 /= 0 || (mod x 100 == 0 && mod x 400 /= 0) = False
-              | otherwise                                                   = True
+bisiesto x  | mod x 4 /= 0 || (mod x 100 == 0 && mod x 400 /= 0) = False
+            | otherwise                                          = True
 
 {-
   =========================================
@@ -194,6 +194,6 @@ sumaUltimosDosDigitos:: Integer -> Integer
 sumaUltimosDosDigitos x = mod (abs x) 10 + mod (div (abs x) 10) 10
 
 comparar:: Integer -> Integer -> Integer
-comparar a b | sumaUltimosDosDigitos(a) < sumaUltimosDosDigitos(b) = 1
-            | sumaUltimosDosDigitos(a) > sumaUltimosDosDigitos(b) = -1
-            | sumaUltimosDosDigitos(a) == sumaUltimosDosDigitos(b) = 0
+comparar a b  | sumaUltimosDosDigitos(a) < sumaUltimosDosDigitos(b) = 1
+              | sumaUltimosDosDigitos(a) > sumaUltimosDosDigitos(b) = -1
+              | sumaUltimosDosDigitos(a) == sumaUltimosDosDigitos(b) = 0
