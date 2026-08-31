@@ -194,6 +194,21 @@ sumaUltimosDosDigitos:: Integer -> Integer
 sumaUltimosDosDigitos x = mod (abs x) 10 + mod (div (abs x) 10) 10
 
 comparar:: Integer -> Integer -> Integer
-comparar a b  | sumaUltimosDosDigitos(a) < sumaUltimosDosDigitos(b) = 1
-              | sumaUltimosDosDigitos(a) > sumaUltimosDosDigitos(b) = -1
-              | sumaUltimosDosDigitos(a) == sumaUltimosDosDigitos(b) = 0
+comparar a b  | sumaUltimosDosDigitos a < sumaUltimosDosDigitos b = 1
+              | sumaUltimosDosDigitos a > sumaUltimosDosDigitos b = -1
+              | sumaUltimosDosDigitos a == sumaUltimosDosDigitos b = 0
+
+{-
+  =========================================
+  Correcciones
+  =========================================
+  No puedo usar la funcion abs porque no esta en la lista de funciones permitidas por lo que creo las mias para utilizarls.
+-}
+
+absInt:: Integer -> Integer
+absInt x  | x < 0     = -x
+          | otherwise = x
+
+absFloat:: Float -> Float
+absFloat x  | x < 0     = -x
+          | otherwise = x
