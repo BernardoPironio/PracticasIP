@@ -1,4 +1,4 @@
-
+![imagen](https://elc.github.io/blog/images/haskell_python/haskell_python_headerimage.png)
 # Practicas Introducción a la programación
 
 Practicas resueltas para la materia de Introducción a la programación. Las practicas corresponden al segundo cuatrimeste de 2026. El codigo de las distintas practicas se realiza con Haskell y Python.
