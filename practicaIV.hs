@@ -57,4 +57,19 @@ medioFact n | n == 0 || n == 1 = 1
 -}
 
 
+todosDigitosIguales:: Integer -> Bool
+todosDigitosIguales n | div n 10 == 0 = True
+                      | otherwise     = mod n 10 == mod (div n 10) 10 && todosDigitosIguales (div n 10)
 
+{-
+  =========================================
+  EJERCICIO 7
+  =========================================
+-}
+
+cantDigitos:: Integer -> Integer
+cantDigitos n | div n 10 == 0 = 1
+              | otherwise     = 1 + cantDigitos (div n 10)
+
+iesimoDigito:: Integer -> Integer -> Integer
+iesimoDigito n i = mod (div n( 10^(cantDigitos n - i))) 10
