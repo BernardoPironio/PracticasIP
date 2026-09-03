@@ -73,3 +73,25 @@ cantDigitos n | div n 10 == 0 = 1
 
 iesimoDigito:: Integer -> Integer -> Integer
 iesimoDigito n i = mod (div n( 10^(cantDigitos n - i))) 10
+
+{-
+  =========================================
+  EJERCICIO 8
+  =========================================
+-}
+
+sumaDigitos:: Integer -> Integer
+sumaDigitos n | div n 10 == 0  = mod n 10
+              | otherwise      = mod n 10 + sumaDigitos (div n 10)
+
+{-
+  =========================================
+  EJERCICIO 9
+  =========================================
+-}
+
+esCapicua:: Integer -> Bool
+esCapicua n | div n 10 == 0 = True
+            | otherwise     = mod n 10 == mod (div n (10^((cantDigitos n) - 1))) 10 -- && esCapicua (div n 10) 
+
+
