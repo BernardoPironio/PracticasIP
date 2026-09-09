@@ -6,6 +6,7 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 ## Contenidos
 * practicaIII.hs: Introducción a Haskell
 * practicaIV.hs: Recursión sobre números enteros
+* practicaV.hs: Recursión sobre listas
 
 ## Funciones permitidas en Haskell
 
