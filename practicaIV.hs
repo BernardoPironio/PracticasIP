@@ -244,16 +244,65 @@ esFibonacci n = esFibonacciAux n 0 1
 
 {-
   =========================================
+  EJERCICIO 18
+  =========================================
+-}
+
+mayorDigitoPar :: Integer -> Integer
+
+mayorDigitoPar n  | n < 10 && mod n 2 == 0                                        = n
+                  | n < 10                                                        = -1
+                  | mod (mod n 10) 2 == 0 && mod n 10 > mayorDigitoPar (div n 10) = mod n 10
+                  | mod (mod n 10) 2 == 0                                         = mayorDigitoPar (div n 10)
+                  | otherwise                                                     = mayorDigitoPar (n `div` 10)
+
+{-
+  =========================================
   EJERCICIO 19
   =========================================
 -}
 
---esSumaInicialDePrimos:: Integer -> Bool
---esSumaInicialDePrimos n | n - sumaPrimos(1) < 0 = False
- --                       | otherwise = n == 
+esSumaInicialDePrimos:: Integer -> Bool
+esSumaInicialDePrimos n = daCero n 1
+  where 
+    daCero n i  | n - sumaPrimos i == 0 = True
+                | n - sumaPrimos i < 0  = False
+                | otherwise             = daCero n (i + 1)
  
---sumaPrimos:: Integer -> Integer 
---sumaPrimos n | n == 0 = 0
---              | otherwise = nEsimoPrimo n + sumaPrimos (n-1) 
+sumaPrimos:: Integer -> Integer 
+sumaPrimos n  | n == 0    = 0
+              | otherwise = nEsimoPrimo n + sumaPrimos (n-1) 
 
+{-
+  =========================================
+  EJERCICIO 20
+  =========================================
+-}
+
+tomaValorMax :: Integer -> Integer -> Integer
+tomaValorMax n1 n2  | n1 == n2                                                                                  = n1
+                    | sumaDivisores n2 n2 > sumaDivisores (tomaValorMax n1 (n2 - 1)) (tomaValorMax n1 (n2 - 1)) = n2
+                    | otherwise                                                                                 = tomaValorMax n1 (n2 - 1)
+
+
+sumaDivisores:: Integer -> Integer -> Integer 
+sumaDivisores n k | k == 1       = 1
+                  | mod n k == 0 = k + sumaDivisores n (k - 1)
+                  | otherwise    = sumaDivisores n (k - 1)
+
+{-
+  =========================================
+  EJERCICIO 21
+  =========================================
+-}
+
+pitagoras :: Integer -> Integer -> Integer -> Integer
+pitagoras m n r | n == 0 = recorrerM m n r 
+                | otherwise = recorrerM m n r + pitagoras m (n - 1) r
+
+recorrerM:: Integer -> Integer -> Integer -> Integer
+recorrerM m n r | (m == 0) && (n^2 <= r^2) = 1
+                | (m == 0) && (n^2 > r^2)  = 0
+                | m^2 + n^2 <= r^2         = 1 + recorrerM (m - 1) n r
+                | otherwise                = recorrerM (m - 1) n r
 
