@@ -10,14 +10,44 @@ longitud []     = 0
 longitud (x:xs) = 1 + longitud (xs)
 
 -- (2)
---ultimo :: [t] -> t
---ultimo
+ultimo:: [t] -> t
+ultimo [x]    = x
+ultimo (x:xs) = ultimo xs
+
+-- (3)
+principio:: [t] -> [t]
+principio [x]    = []
+principio (x:xs) = x : principio xs
+
+-- (4)
+reverso:: [t] -> [t]
+reverso []     = []
+reverso [x]    = [x] 
+reverso (x:xs) = reverso xs ++ [x]
 
 {-
   =========================================
   EJERCICIO 2
   =========================================
 -}
+
+-- (1)
+pertenece:: (Eq t) => t -> [t] -> Bool
+pertenece _ []                  = False
+pertenece e (x:xs)  | e == x    = True
+                    | otherwise = pertenece e xs
+
+-- (2)
+todosIguales:: (Eq t) => [t] -> Bool
+todosIguales []       = True
+todosIguales [_]      = True
+todosIguales (x:y:xs) = x == y && todosIguales (y:xs)
+
+-- (3)
+todosDistintos:: (Eq t) => [t] -> Bool
+todosDistintos []       = True
+todosDistintos [_]      = True
+
 
 -- (5)
 --quitar :: (Eq t) => t -> [t] -> [t]
@@ -65,10 +95,10 @@ sumarnACadaElemento n (x:xs) = (x + n): sumarnACadaElemento n xs
 --    requiere = {Ture}
 --    asegura = {res = true <-> e in s}}
 
-pertenece :: Eq t => t -> [t] -> Bool
-pertenece n [] = False
-pertenece n (x:xs)  | n == x = True
-                    | otherwise = pertenece n xs
+--pertenece :: Eq t => t -> [t] -> Bool
+--pertenece n [] = False
+--pertenece n (x:xs)  | n == x = True
+--                    | otherwise = pertenece n xs
 
 {-
   =========================================
