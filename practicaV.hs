@@ -46,16 +46,54 @@ todosIguales (x:y:xs) = x == y && todosIguales (y:xs)
 -- (3)
 todosDistintos:: (Eq t) => [t] -> Bool
 todosDistintos []       = True
-todosDistintos [_]      = True
+todosDistintos (x:xs) | pertenece x xs = False
+                      | otherwise      = todosDistintos xs
 
+-- (4)
+hayRepetidos:: (Eq t) => [t] -> Bool
+hayRepetidos [] = False
+hayRepetidos (x:xs) | pertenece x xs = True
+                    | otherwise      = hayRepetidos xs 
 
 -- (5)
---quitar :: (Eq t) => t -> [t] -> [t]
---quitar e [] = []
---quitar e (x:xs) | e == xs = xs
---                | otherwise = x:(quitar e xs)
+quitar :: (Eq t) => t -> [t] -> [t]
+quitar e [] = []
+quitar e (x:xs) | e == x    = xs
+                | otherwise = x : (quitar e xs)
+
+-- (6)
+quitarTodos :: (Eq t ) => t -> [t] -> [t]
+quitarTodos _ [] = []
+quitarTodos e (x:xs)  | pertenece e (x:xs) == False = (x:xs)
+                      | otherwise                   = quitarTodos e (quitar e (x:xs))
+
+-- (7)
+eliminarRepetidos :: (Eq t) => [t] -> [t]
+eliminarRepetidos [] = []
+eliminarRepetidos (x:xs)  | hayRepetidos (x:xs) == False = (x:xs)
+                          | pertenece x xs == True       = x : eliminarRepetidos (quitar x xs)
+                          | otherwise                    = x : eliminarRepetidos xs
+
+-- (8)
+mismosElementos :: (Eq t) => [t] -> [t] -> Bool
+mismosElementos [] _          = False
+mismosElementos _ []          = False
+mismosElementos (x:xs) (y:ys) = todosPertenecen (x:xs) (y:ys) && todosPertenecen (y:ys) (x:xs)
 
 
+todosPertenecen:: (Eq t) => [t] -> [t] -> Bool
+todosPertenecen [] _ = True
+todosPertenecen (x:xs) (y:ys) | pertenece x (y:ys) && todosPertenecen xs (y:ys) = True
+                              | otherwise                                       = False
+
+-- (9)
+capicua :: (Eq t) => [t] -> Bool
+capicua [] = True
+capicua (x:xs)  | x == primero (reverso (x:xs)) && capicua (quitar (ultimo xs) xs) = True
+                | otherwise = False
+
+primero:: [t] -> t
+primero (x:xs) = x
 
 {-
   =========================================
@@ -64,9 +102,9 @@ todosDistintos [_]      = True
 -}
 
 -- (1)
-sumatoria :: [Integer] -> Integer
-sumatoria []     = 0
-sumatoria (x:xs) = x + sumatoria (xs)
+--sumatoria :: [Integer] -> Integer
+--sumatoria []     = 0
+--sumatoria (x:xs) = x + sumatoria (xs)
 
 -- (3)
 --maximo :: [Integer] -> Integer
