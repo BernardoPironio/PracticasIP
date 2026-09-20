@@ -7,6 +7,7 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 * practicaIII.hs: Introducción a Haskell
 * practicaIV.hs: Recursión sobre números enteros
 * practicaV.hs: Recursión sobre listas
+* simulacro_parcial.hs: Simulacro del primer parcial, con casos de test incluidos
 
 ## Funciones permitidas en Haskell
 
