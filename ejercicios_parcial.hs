@@ -103,7 +103,7 @@ masRepetido (x:xs)  = masRepetidoFila (aplanar (x:xs))
 
 masRepetidoFila :: Fila -> Integer
 masRepetidoFila [x] = x
-masRepetidoFila (x:xs)  | cantElementos x (x:xs) > cantElementos (masRepetidoFila xs) (x:xs) = x
+masRepetidoFila (x:xs)  | cantElementos x (x:xs) >= cantElementos (masRepetidoFila xs) (x:xs) = x
                         | otherwise = masRepetidoFila xs
 
 cantElementos:: Integer -> Fila -> Integer
@@ -214,12 +214,12 @@ test6 = test [
   "Tablero minimo de 1x1" ~: (masRepetido [[5]]) ~?= 5,
   "Un numero claramente mas repetido que el resto" ~: (masRepetido [[1, 2, 2], [3, 2, 4], [2, 5, 2]]) ~?= 2,
   "Tablero donde todos los numeros son iguales" ~: (masRepetido [[7, 7], [7, 7]]) ~?= 7,
-  "Ningun numero se repite (todos aparecen 1 vez)" ~: (masRepetido [[1, 2], [3, 4]]) ~?= 4,  -- Valido devolver 1, 2, 3 o 4 por desempate
-  "Empate de frecuencia entre dos numeros" ~: (masRepetido [[1, 1, 2], [2, 3, 4]]) ~?= 2,  -- Valido devolver 1 o 2 (ambos aparecen 2 veces)
+  "Ningun numero se repite (todos aparecen 1 vez)" ~: (masRepetido [[1, 2], [3, 4]]) ~?= 1,  -- Valido devolver 1, 2, 3 o 4 por desempate
+  "Empate de frecuencia entre dos numeros" ~: (masRepetido [[1, 1, 2], [2, 3, 4]]) ~?= 1,  -- Valido devolver 1 o 2 (ambos aparecen 2 veces)
   "Tablero de 1 fila y varias columnas" ~: (masRepetido [[4, 8, 8, 5]]) ~?= 8,
   "Tablero de varias filas y 1 columna" ~: (masRepetido [[3], [3], [10]]) ~?= 3
   ]
 
 
 allTests :: Test
-allTests = test [test1,test2,test3,test4]
+allTests = test [test1,test2,test3,test4,test5,test6]
