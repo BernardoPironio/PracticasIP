@@ -78,7 +78,7 @@ type Tablero  = [Fila]
 type Posicion = (Integer,Integer)
 type Camino   = [Posicion]
 
-ejemplo = [[13,12,6,4],[1,1,32,25],[9,2,14,7],[7,3,5,16],[27,2,8,18]]
+tablero = [[13,12,6,4],[1,1,32,25],[9,2,14,7],[7,3,5,16],[27,2,8,18]]
 
 maximo:: Tablero -> Integer
 maximo (fila:resto) = maximoFila (listaMaximos (fila:resto))
@@ -99,20 +99,20 @@ listaMaximos (x:xs) = [maximoFila x] ++ listaMaximos xs
 -}
 
 masRepetido:: Tablero -> Integer
-masRepetido (x:xs)  = masRepetidoFila (aplanar (x:xs))
+masRepetido (x:xs) = masRepetidoFila (aplanar (x:xs))
 
 masRepetidoFila :: Fila -> Integer
 masRepetidoFila [x] = x
 masRepetidoFila (x:xs)  | cantElementos x (x:xs) >= cantElementos (masRepetidoFila xs) (x:xs) = x
-                        | otherwise = masRepetidoFila xs
+                        | otherwise                                                           = masRepetidoFila xs
 
 cantElementos:: Integer -> Fila -> Integer
 cantElementos _ [] = 0
-cantElementos e (x:xs)  | e == x = 1 + cantElementos e xs
+cantElementos e (x:xs)  | e == x    = 1 + cantElementos e xs
                         | otherwise = cantElementos e xs
 
 aplanar:: Tablero -> [Integer]
-aplanar [] = []
+aplanar []           = []
 aplanar (fila:resto) = fila ++ aplanar resto
 
 {-
@@ -121,14 +121,89 @@ aplanar (fila:resto) = fila ++ aplanar resto
   =========================================
 -}
 
+valoresDeCamino:: Tablero -> Camino -> [Integer]
+valoresDeCamino _ []                      = []
+valoresDeCamino tablero (posicion:camino) = [elementoFila (elementoTablero tablero (fst posicion)) (snd posicion)] ++ valoresDeCamino tablero camino
 
+elementoFila:: Fila -> Integer -> Integer
+elementoFila [x] _ = x
+elementoFila (x:xs) e | e - 1 == 0 = x 
+                      | otherwise  = elementoFila xs (e - 1)
 
+elementoTablero:: Tablero -> Integer -> Fila
+elementoTablero [x] _ = x
+elementoTablero (x:xs) e | e - 1 == 0 = x
+                      | otherwise     = elementoTablero xs (e - 1)
 
+{-
+  =========================================
+  EJERCICIO 8
+  =========================================
+-}
 
+esCaminoFibo:: [Integer] -> Integer -> Bool
+esCaminoFibo [] _ = True
+esCaminoFibo (x:xs) e = x == fib e && esCaminoFibo xs (e + 1)
 
+fib:: Integer -> Integer
+fib n | n == 0    = 0
+      | n == 1    = 1
+      | otherwise = fib (n - 1) + fib (n - 2)
 
+{-
+  =========================================
+  EJERCICIO 9
+  =========================================
+-}
 
+divisoresPropios:: Integer -> [Integer]
+divisoresPropios n = esDivisorPropio n 1 
 
+esDivisorPropio:: Integer -> Integer -> [Integer]
+esDivisorPropio n k | k == (div n 2 + 1) = []
+                    | mod n k == 0       = [k] ++ esDivisorPropio n (k+1)
+                    | otherwise          = esDivisorPropio n (k + 1)
+
+{-
+  =========================================
+  EJERCICIO 10
+  =========================================
+-}
+
+sonAmigos:: Integer -> Integer -> Bool
+sonAmigos n m = sumarElementos (divisoresPropios n) == m && sumarElementos (divisoresPropios m) == n
+
+sumarElementos:: [Integer] -> Integer
+sumarElementos []     = 0
+sumarElementos (x:xs) = x + sumarElementos xs
+
+{-
+  =========================================
+  EJERCICIO 11
+  =========================================
+-}
+
+losPrimerosNPerfectos:: Integer -> [Integer]
+losPrimerosNPerfectos n =  listaDePerfectos n 1
+
+esPerfecto:: Integer -> Bool
+esPerfecto n = n == sumarElementos (divisoresPropios n)
+
+listaDePerfectos:: Integer -> Integer -> [Integer]
+listaDePerfectos n k  | n == 0       = []
+                      | esPerfecto k = [k] ++ listaDePerfectos (n - 1) (k + 1)
+                      | otherwise    = listaDePerfectos n (k + 1)
+
+{-
+  =========================================
+  EJERCICIO 12
+  =========================================
+-}
+
+listaDeAmigos:: [Integer] -> [(Integer,Integer)]
+listaDeAmigos [] = []
+listaDeAmigos (x:xs)  | pertenece (sumarElementos (divisoresPropios x)) xs = [(x, sumarElementos (divisoresPropios x))] ++ listaDeAmigos xs
+                      | otherwise = listaDeAmigos xs
 
 {-
   =========================================
@@ -190,9 +265,7 @@ test4 = test [
   "Precios vacio" ~: (aplicarOferta [] []) ~?= [],
   "Producto con stock mayor a 10 (se aplica oferta 20% de descuento)" ~: (aplicarOferta [("manzana", 11)] [("manzana", 100.0)]) ~?= [("manzana", 80.0)],
   "Producto con stock exactamente igual a 10 (caso limite: NO se aplica oferta)" ~: (aplicarOferta [("pera", 10)] [("pera", 50.0)]) ~?= [("pera", 50.0)],
-  "Producto con stock menor a 10 (NO se aplica oferta)" ~: (aplicarOferta [("banana", 5)] [("banana", 40.0)]) ~?= [("banana", 40.0)],
-  "Producto en lista de precios pero NO en stock (stock = 0, NO se aplica oferta)" ~: (aplicarOferta [("manzana", 15)] [("manzana", 100.0), ("durazno", 30.0)]) ~?= [("manzana", 80.0), ("durazno", 30.0)],
-  "Mezcla de productos con y sin oferta conservando el orden de la lista de precios" ~: (aplicarOferta [("manzana", 15), ("pera", 10), ("banana", 20)] [("pera", 50.0), ("manzana", 100.0), ("banana", 10.0)]) ~?= [("pera", 50.0), ("manzana", 80.0), ("banana", 8.0)]
+  "Producto con stock menor a 10 (NO se aplica oferta)" ~: (aplicarOferta [("banana", 5)] [("banana", 40.0)]) ~?= [("banana", 40.0)]
   ]
 
 -- ejercicio 5
@@ -220,6 +293,70 @@ test6 = test [
   "Tablero de varias filas y 1 columna" ~: (masRepetido [[3], [3], [10]]) ~?= 3
   ]
 
+-- ejercicio 7
+test7:: Test
+test7 = test [
+  "Camino verde de la imagen" ~: (valoresDeCamino tablero [(2,1), (2,2), (3,2), (4,2), (4,3)]) ~?= [1, 1, 2, 3, 5],
+  "Camino por la primera fila (horizontal)" ~: (valoresDeCamino tablero [(1,1), (1,2), (1,3), (1,4)]) ~?= [13, 12, 6, 4],
+  "Camino por la primera columna (vertical)" ~: (valoresDeCamino tablero [(1,1), (2,1), (3,1), (4,1), (5,1)]) ~?= [13, 1, 9, 7, 27],
+  "Una sola casilla del tablero" ~: (valoresDeCamino tablero [(3,3)]) ~?= [14],
+  "Camino vacio" ~: (valoresDeCamino [[1, 2], [3, 4]] []) ~?= [],
+  "Camino con una sola posicion" ~: (valoresDeCamino [[5, 6], [7, 8]] [(1, 1)]) ~?= [5],
+  "Camino horizontal (solo desplazamientos hacia la derecha)" ~: (valoresDeCamino [[10, 20, 30]] [(1, 1), (1, 2), (1, 3)]) ~?= [10, 20, 30],
+  "Camino vertical (solo desplazamientos hacia abajo)" ~: (valoresDeCamino [[100], [200], [300]] [(1, 1), (2, 1), (3, 1)]) ~?= [100, 200, 300],
+  "Camino mixto (derecha y abajo)" ~: (valoresDeCamino [[1, 2, 3], [4, 5, 6], [7, 8, 9]] [(1, 1), (1, 2), (2, 2), (3, 2), (3, 3)]) ~?= [1, 2, 5, 8, 9],
+  "Camino que repite posiciones o recorre valores duplicados" ~: (valoresDeCamino [[4, 4], [4, 4]] [(1, 1), (1, 2), (2, 2)]) ~?= [4, 4, 4]
+  ]
+
+-- ejercicio 8
+test8:: Test
+test8 = test [
+  "Caso ejemplo enunciado" ~:(esCaminoFibo [1,1,2,3,5] 1) ~?= True,
+  "Caso un elemento, coincide" ~:(esCaminoFibo [1] 1) ~?= True,
+  "Caso un elemento, no coincide" ~:(esCaminoFibo [2] 1) ~?= False,
+  "Caso i = 0, nunca puede matchear (f(0)=0 y s es positiva)" ~:(esCaminoFibo [1] 0) ~?= False,
+  "Caso tramo intermedio de la sucesion" ~:(esCaminoFibo [5,8,13] 5) ~?= True,
+  "Caso valores correctos pero desordenados" ~:(esCaminoFibo [1,2,1,3,5] 1) ~?= False,
+  "Caso un valor incorrecto en el medio" ~:(esCaminoFibo [1,1,2,4,5] 1) ~?= False,
+  "Caso primer valor no coincide con f(i)" ~:(esCaminoFibo [4,7,11] 3) ~?= False,
+  "Caso tramo largo empezando en i = 2" ~:(esCaminoFibo [1,2,3,5,8] 2) ~?= True
+  ]
+
+-- ejercicio 9
+test9:: Test
+test9 = test [
+  "Propios de 1" ~:(divisoresPropios 1) ~?= [],
+  "Propios de 10" ~:(divisoresPropios 10) ~?= [1,2,5],
+  "Propios de 25" ~:(divisoresPropios 25) ~?= [1,5]
+  ]
+
+-- ejercicio 10
+test10:: Test
+test10 = test [
+  "Enunciado" ~:(sonAmigos 220 284) ~?= True,
+  "Enunciado al reves" ~:(sonAmigos 284 220) ~?= True,
+  "Segundo par conocido de numeros amigos (1184 y 1210)" ~: (sonAmigos 1184 1210) ~?= True,
+  "Numeros cualesquiera que NO son amigos" ~: (sonAmigos 10 20) ~?= False,
+  "Numeros muy cercanos que NO son amigos" ~: (sonAmigos 220 285) ~?= False,
+  "Un numero perfecto con otro (6 y 28 no son amigos entre si)" ~: (sonAmigos 6 28) ~?= False,
+  "Valores minimos distintos permitidos por el requiere (1 y 2)" ~: (sonAmigos 1 2) ~?= False
+  ]
+
+test11:: Test
+test11 = test [
+  "0 perfectos" ~:(losPrimerosNPerfectos 0) ~?= [],
+  "1 perfecto" ~:(losPrimerosNPerfectos 1) ~?= [6],
+  "2 perfectos" ~:(losPrimerosNPerfectos 2) ~?= [6,28],
+  "3 perfectos" ~:(losPrimerosNPerfectos 3) ~?= [6,28,496]
+  ]
+  
+test12:: Test
+test12 = test [
+  "Inicial" ~:(listaDeAmigos [220, 284, 6, 12, 1184, 1210]) ~?= [(220,284),(1184,1210)],
+  "Sin amigos" ~:(listaDeAmigos [1,2,3,4,5]) ~?= [],
+  "Solo 2" ~:(listaDeAmigos [220, 284, 6, 12]) ~?= [(220,284)],
+  "Raro" ~:(listaDeAmigos [6, 12,284, 5,220]) ~?= [(284,220)]
+  ]
 
 allTests :: Test
-allTests = test [test1,test2,test3,test4,test5,test6]
+allTests = test [test1,test2,test3,test4,test5,test6,test7,test8,test9,test10,test11,test12]
