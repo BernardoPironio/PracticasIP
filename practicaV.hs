@@ -102,41 +102,329 @@ primero (x:xs) = x
 -}
 
 -- (1)
---sumatoria :: [Integer] -> Integer
---sumatoria []     = 0
---sumatoria (x:xs) = x + sumatoria (xs)
+sumatoria :: [Integer] -> Integer
+sumatoria []     = 0
+sumatoria (x:xs) = x + sumatoria (xs)
+
+-- (2)
+productoria:: [Integer] -> Integer
+productoria []     = 1
+productoria (x:xs) = x * productoria xs
 
 -- (3)
---maximo :: [Integer] -> Integer
---maximo (x)    = x
---maximo (x:xs)   | x > maximo xs = x
---                | otherwise     = maximo xs 
+maximo :: [Integer] -> Integer
+maximo [x]    = x
+maximo (x:xs)   | x > maximo xs = x
+                | otherwise     = maximo xs 
+
+-- (4)
+sumarN:: Integer -> [Integer] -> [Integer]
+sumarN _ []     = []
+sumarN n (x:xs) = (x + n) : sumarN n xs
+
+-- (5)
+sumarElPrimero:: [Integer] -> [Integer]
+sumarElPrimero (x:xs) = sumarN x (x:xs)
+
+-- (6)
+sumarElUltimo:: [Integer] -> [Integer]
+sumarElUltimo (x:xs) = sumarN (ultimo (x:xs)) (x:xs)
+
+-- (7)
+pares:: [Integer] -> [Integer]
+pares [] = []
+pares (x:xs)  | mod x 2 == 0 = x : pares xs
+              | otherwise    = pares xs
+
+-- (8)
+multiplosDeN:: Integer -> [Integer] -> [Integer]
+multiplosDeN _ [] = []
+multiplosDeN n (x:xs) | mod x n == 0 = x : multiplosDeN n xs
+                      | otherwise    = multiplosDeN n xs
+
 -- (9)
---ordenar :: [Integer] -> [Integer]
---ordenar
+ordenar :: [Integer] -> [Integer]
+ordenar []    = []
+ordenar lista = minimo lista : ordenar (quitar (minimo lista) lista)
+
+minimo:: [Integer] -> Integer
+minimo [x] = x
+minimo (x:xs) | x < minimo xs = x
+              | otherwise     = minimo xs
 
 {-
   =========================================
-  PROBLEMA PRÁCTICA
+  EJERCICIO 4
   =========================================
 -}
 
--- problema sumarnACadaElemento(n: T, s:seq<T>): seq<T>{
---    requiere = {Ture}
---    asegura = {|res| = |s| y cada elemento de res es el elemento de s en ese lugar sumado de n }}
+-- (1)
+--- (a)
+sacarBlancosRepetidos:: [Char] -> [Char]
+sacarBlancosRepetidos []  = []
+sacarBlancosRepetidos [x] = [x]
+sacarBlancosRepetidos (x:y:resto) | x == ' ' && y == ' ' = sacarBlancosRepetidos (y:resto)
+                                  | otherwise            = x : sacarBlancosRepetidos (y:resto)
 
-sumarnACadaElemento:: Integer -> [Integer] -> [Integer]
-sumarnACadaElemento n [] = []
-sumarnACadaElemento n (x:xs) = (x + n): sumarnACadaElemento n xs 
+--- (b)
+contarPalabras:: [Char] -> Integer
 
--- problema pertenece(e: T, s:seq<T>): Bool{
---    requiere = {Ture}
---    asegura = {res = true <-> e in s}}
+contarPalabras [x]  | x == ' '  = 0
+                    | otherwise = 1
+contarPalabras (x:y:resto)  | x /= ' ' && y == ' ' = 1 + contarPalabras (y:resto)
+                            | otherwise            = contarPalabras (y:resto)
 
---pertenece :: Eq t => t -> [t] -> Bool
---pertenece n [] = False
---pertenece n (x:xs)  | n == x = True
---                    | otherwise = pertenece n xs
+--- (c)
+palabras:: [Char] -> [[Char]]
+palabras [] = []
+palabras (x:xs) | x == ' ' = palabras xs
+                | otherwise = armarPalabra  (x:xs) : palabras (saltarPalabra (x:xs))
+
+armarPalabra:: [Char] -> [Char]
+armarPalabra [] = []
+armarPalabra (x:resto)  | x == ' ' = []
+                        | otherwise = x : armarPalabra (resto)
+
+saltarPalabra:: [Char] -> [Char]
+saltarPalabra [] = []
+saltarPalabra (x:xs)  | x == ' ' = xs
+                      | otherwise = saltarPalabra xs
+
+--- (d)
+palabraMasLarga :: [Char] -> [Char]
+palabraMasLarga s = palabraMasLargaLista (palabras s)
+
+palabraMasLargaLista :: [[Char]] -> [Char]
+palabraMasLargaLista [p] = p
+palabraMasLargaLista (p:ps) | largo p > largo (palabraMasLargaLista ps) = p
+                            | otherwise                                 = palabraMasLargaLista ps
+
+largo:: [Char] -> Integer
+largo []     = 0
+largo (x:xs) = 1 + largo xs
+
+--- (e)
+aplanar:: [[Char]] -> [Char]
+aplanar []     = []
+aplanar (x:xs) = x ++ aplanar xs
+
+--- (f)
+aplanarConBlancos:: [[Char]] -> [Char]
+aplanarConBlancos []     = []
+aplanarConBlancos [x]    = x
+aplanarConBlancos (x:xs) = x ++ " " ++ aplanarConBlancos xs
+
+--- (g)
+aplanarConNBlancos:: [[Char]] -> Integer -> [Char]
+aplanarConNBlancos [] _     = []
+aplanarConNBlancos [x] _    = x
+aplanarConNBlancos (x:xs) n = x ++ nBlancos n ++ aplanarConNBlancos xs n
+
+nBlancos:: Integer -> [Char]
+nBlancos 0 = []
+nBlancos n = " " ++ nBlancos (n - 1)
+
+{-
+  =========================================
+  EJERCICIO 5
+  =========================================
+-}
+
+-- (1)
+sumaAcumulada:: (Num t) => [t] -> [t]
+sumaAcumulada []       = []
+sumaAcumulada [x]      = [x]
+sumaAcumulada (x:y:xs) = [x] ++ sumaAcumulada (x + y:xs)
+
+-- (2)
+descomponerEnPrimos:: [Integer] -> [[Integer]]
+descomponerEnPrimos [] = []
+descomponerEnPrimos (x:xs) = [factorizarEnPrimos x] ++ descomponerEnPrimos xs
+
+factorizarEnPrimos:: Integer  -> [Integer]
+factorizarEnPrimos 1 = []
+factorizarEnPrimos n = primerPrimo n 2 : factorizarEnPrimos (div n (primerPrimo n 2))
+
+primerPrimo:: Integer -> Integer -> Integer
+primerPrimo p k | mod p k == 0 = k
+                | otherwise    = primerPrimo p (k + 1)
+
+{-
+  =========================================
+  EJERCICIO 6
+  =========================================
+-}
+
+type Texto        = [Char]
+type Nombre       = Texto
+type Telefono     = Texto
+type Contacto     = (Nombre,Telefono)
+type ContactosTel = [Contacto] 
+
+elNombre:: Contacto -> Nombre
+elNombre (nombre,telefono) = nombre
+
+elTelefono:: Contacto -> Telefono
+elTelefono (nombre,telefono) = telefono
+
+-- (a)
+enLosContactos:: Nombre -> ContactosTel -> Bool
+enLosContactos _ [] = False
+enLosContactos nombre (contacto:resto)  | nombre == elNombre contacto = True
+                                        | otherwise                   = enLosContactos nombre resto
+
+-- (b)
+agregarContacto :: Contacto -> ContactosTel -> ContactosTel
+agregarContacto (nombre,telefono) contactos  | enLosContactos nombre contactos == False = contactos ++ [(nombre,telefono)]
+                                             | otherwise                                = agregarContacto (nombre,telefono) (eliminarContacto nombre contactos)
+
+
+-- (c)
+eliminarContacto:: Nombre -> ContactosTel -> ContactosTel
+eliminarContacto _ [] = []
+eliminarContacto nombre (contacto:resto) | nombre == (elNombre contacto) = resto
+                                         | otherwise                     = contacto : eliminarContacto nombre resto
+
+{-
+  =========================================
+  EJERCICIO 7
+  =========================================
+-}
+
+type Identificacion = Integer
+type Ubicacion = Texto
+type Disponibilidad = Bool
+type Estado = (Disponibilidad,Ubicacion)
+type Locker = (Identificacion, Estado)
+type MapaDeLockers = [Locker]
+
+-- (1)
+existeElLocker:: Identificacion -> MapaDeLockers -> Bool
+existeElLocker _ [] = False
+existeElLocker identificacion (locker:lockers)  | identificacion == (fst locker) = True
+                                                | otherwise                      = existeElLocker identificacion lockers
+
+-- (2)
+ubicacionDelLocker:: Identificacion -> MapaDeLockers -> Ubicacion
+ubicacionDelLocker _ [] = "No existe"
+ubicacionDelLocker identificacion (locker:lockers)  | identificacion == (fst locker) = snd (snd locker)
+                                                    | otherwise                      = ubicacionDelLocker identificacion lockers
+
+-- (3)
+staDisponibleElLocker:: Identificacion -> MapaDeLockers -> Bool
+staDisponibleElLocker identificacion (locker:lockers)  | identificacion == (fst locker) = fst (snd locker)
+                                                       | otherwise                      = staDisponibleElLocker identificacion lockers
+
+-- (4)
+ocuparLocker:: Identificacion -> MapaDeLockers -> MapaDeLockers
+ocuparLocker _ [] = []
+ocuparLocker identificacion (locker:lockers)  | identificacion == (fst locker) = (identificacion,(False,snd (snd locker))) : lockers
+                                              | otherwise                      = locker : ocuparLocker identificacion lockers
+
+{-
+  =========================================
+  EJERCICIO 8
+  =========================================
+-}
+
+type Matriz = [[Integer]]
+type Fila = [Integer]
+
+-- (1)
+sumaTotal :: Matriz -> Integer
+sumaTotal []     = 0
+sumaTotal (x:xs) = sumarFila x + sumaTotal xs
+
+sumarFila:: Fila -> Integer
+sumarFila []     = 0 
+sumarFila (x:xs) = x + sumarFila xs
+
+-- (2)
+cantidadDeApariciones:: Integer -> [[Integer]] -> Integer
+cantidadDeApariciones _ []            = 0
+cantidadDeApariciones e (fila:resto)  = cantidadEnFila fila e + cantidadDeApariciones e resto
+
+cantidadEnFila:: Fila -> Integer -> Integer
+cantidadEnFila [] _ = 0
+cantidadEnFila (x:xs) e | e == x    = 1 + cantidadEnFila xs e
+                        | otherwise = cantidadEnFila xs e
+
+-- (3)
+contarPalabrasMatriz:: String -> [[String]] -> Integer
+contarPalabrasMatriz p [x]          = contarPalabrasFila p x
+contarPalabrasMatriz p (fila:resto) = contarPalabrasFila p fila + contarPalabrasMatriz p resto
+
+contarPalabrasFila:: String -> [String] -> Integer
+contarPalabrasFila _ [] = 0
+contarPalabrasFila p (palabra:resto)  | p == palabra = 1 + contarPalabrasFila p resto
+                                      | otherwise    = contarPalabrasFila p resto
+
+-- (4)
+cantidadDeApariciones2:: (Eq t) => t -> [[t]] -> Integer
+cantidadDeApariciones2 _ []               = 0
+cantidadDeApariciones2 e (primera:resto)  = cantidadEnFila2 primera e + cantidadDeApariciones2 e resto
+
+
+cantidadEnFila2:: (Eq t) => [t] -> t -> Integer
+cantidadEnFila2 [] _ = 0
+cantidadEnFila2 (primera:resto) e | e == primera = 1 + cantidadEnFila2 resto e
+                                  | otherwise    = cantidadEnFila2 resto e
+
+-- (5)
+multiplicarPorEscalar:: Integer -> [[Integer]] -> [[Integer]]
+multiplicarPorEscalar _ []                = []
+multiplicarPorEscalar lambda (fila:resto) = [multiplicarPorEscalarFila lambda fila] ++ multiplicarPorEscalar lambda resto 
+
+multiplicarPorEscalarFila:: Integer -> [Integer] -> [Integer]
+multiplicarPorEscalarFila _ []          = []
+multiplicarPorEscalarFila lambda (x:xs) = lambda*x : multiplicarPorEscalarFila lambda xs
+
+-- (6)
+concatenarFilas:: [[String]] -> String
+concatenarFilas []           = ""
+concatenarFilas (fila:resto) = concatenar fila ++ concatenarFilas resto
+                        
+
+concatenar:: [String] -> String
+concatenar []     = []
+concatenar (x:xs) = x ++ concatenar xs
+
+-- (7)
+iesimaFila:: Integer -> [[a]] -> [a]
+iesimaFila _ [] = []
+iesimaFila i (fila:resto) | i == 0    = fila
+                          | otherwise = iesimaFila (i - 1) resto
+
+-- (8)
+iesimaColumna:: Integer -> [[a]] -> [a]
+iesimaColumna _ []     = []
+iesimaColumna i (x:xs) = elementoFila i x : iesimaColumna i xs
+
+elementoFila:: Integer -> [t] -> t 
+elementoFila i (x:xs) | i == 0    = x
+                      | otherwise = elementoFila (i - 1) xs
+
+-- (9)
+matrizIdentidad:: Integer -> [[Integer]] 
+matrizIdentidad n = filaDeFilasIdentidad n n
+
+filaIdentidad:: Integer -> Integer -> Fila
+filaIdentidad i k | k == 0    = []
+                  | i == k    = 1 : filaIdentidad i (k - 1)
+                  | otherwise = 0 : filaIdentidad i (k - 1)
+
+filaDeFilasIdentidad:: Integer -> Integer -> [Fila]
+filaDeFilasIdentidad 0 _ = []
+filaDeFilasIdentidad i n = [filaIdentidad i n] ++ filaDeFilasIdentidad (i - 1) n  
+
+-- (10)
+cantidadParesColumna :: Integer -> [[Integer]] -> Integer
+cantidadParesColumna i matriz = cantParesFila (iesimaColumna i matriz)
+
+cantParesFila:: Fila -> Integer
+cantParesFila [] = 0
+cantParesFila (x:xs)  | mod x 2 == 0 = 1 + cantParesFila xs
+                      | otherwise    = cantParesFila xs
 
 {-
   =========================================
@@ -145,23 +433,17 @@ sumarnACadaElemento n (x:xs) = (x + n): sumarnACadaElemento n xs
 -}
 
 -- Ejercicio de matrices
-
 type MatrizInteger = [[Integer]]
 
---multiplicarFilas:: MatrizInteger -> Integer
---multiplicarFilas [fila] = [productoria fila]
---multiplicarFilas (fila:matriz) = productoria fila : multiplicarFilas matriz
+multiplicarFilas:: MatrizInteger -> [Integer]
+multiplicarFilas [] = []
+multiplicarFilas (x:xs) = productoriaFila x : multiplicarFilas xs
 
-productoria:: [Integer] -> Integer
-productoria [n] = n
-productoria (n:ns) = n*(productoria ns)
+productoriaFila:: Fila -> Integer
+productoriaFila [] = 1
+productoriaFila (x:xs) = x * productoriaFila xs
 
--- Cantidad de apariciones
-cantidadDeApariciones:: Integer -> MatrizInteger -> Integer
-cantidadDeApariciones e [fila] = cantidadDeAparicionesEnFila e fila
-cantidadDeApariciones e (fila:matriz) = cantidadDeAparicionesEnFila e fila + cantidadDeApariciones e matriz
 
-cantidadDeAparicionesEnFila:: Integer -> [Integer] -> Integer
-cantidadDeAparicionesEnFila _ [] = 0
-cantidadDeAparicionesEnFila e (n:ns)  | n == e = 1 + cantidadDeAparicionesEnFila e ns
-                                | otherwise = cantidadDeAparicionesEnFila e ns
+
+
+
