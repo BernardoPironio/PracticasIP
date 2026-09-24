@@ -185,3 +185,6 @@ testEjercicio4 = test [
     "matrizConValoresRepetidos" ~: (sumaIesimaColumna [[2,2],[2,2],[2,2]] 1) ~?= 6,
     "matrizGrandeConMezclaDeSignos" ~: (sumaIesimaColumna [[10,-3],[20,-7],[30,15],[-5,1]] 1) ~?= 55
     ]
+
+allTests :: Test
+allTests = test [testEjercicio1, testEjercicio2, testEjercicio3, testEjercicio4]
