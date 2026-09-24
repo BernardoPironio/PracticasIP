@@ -9,6 +9,7 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 * practicaV.hs: Recursión sobre listas.
 * simulacro_parcial.hs: Simulacro del primer parcial, con casos de test incluidos.
 * ejercicios_parcial.hs: Ejercicios tipo parcial, con casos de test incluidos.
+* parcial_1c2025.hs: Parcial del primer cuatrimestre de 2025 resuelto, con casos de test incluidos.
 
 ## Funciones permitidas en Haskell
 
