@@ -4,6 +4,7 @@
 Practicas resueltas para la materia de Introducción a la programación. Las practicas corresponden al segundo cuatrimeste de 2026. El codigo de las distintas practicas se realiza con Haskell y Python.
 
 ## Contenidos
+### Haskell
 * practicaIII.hs: Introducción a Haskell.
 * practicaIV.hs: Recursión sobre números enteros.
 * practicaV.hs: Recursión sobre listas.
@@ -11,6 +12,9 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 * ejercicios_parcial.hs: Ejercicios tipo parcial, con casos de test incluidos.
 * parcial_1c2025.hs: Parcial del primer cuatrimestre de 2025 resuelto, con casos de test incluidos.
 * parcial_haskell.hs: Parcial que nos tomaron el segundo cuatrimestre de 2026, con mutiple choice incluido.
+
+### Python
+* practicaVI.py: Introducción a Lenguaje Imperativo
 
 ## Funciones permitidas en Haskell
 
