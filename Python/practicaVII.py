@@ -102,11 +102,12 @@ def PalabrasUnidas(ps: list)-> str:
     oracion += ps[len(ps) - 1]
     return oracion
 
-def CeroEnPosicionesPares(s: list)-> list:
-    for i in range(len(s)):
-        if i%2 == 0:
-            s[i] = 0
-        else:
-            s[i] = s[i]
-    return s
-        
+def CeroEnPosicionesPares(s: list)-> None:
+    for i in range(0,len(s),2):
+        s[i] = 0
+
+s = [1,2,4,5,6]
+CeroEnPosicionesPares(s)
+print(s)
+
+
