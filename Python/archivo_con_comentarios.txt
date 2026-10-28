@@ -1,0 +1,13 @@
+# Esto es un comentario
+#Esto también es un comentario
+      # Este es otro comentario
+#    este    es    un    comentario    
+Esto no es un comentario
+Esto tampoco # este tampoco
+
+
+
+
+
+# Este sí es un comentario
+# # # # Esto también es un comentario

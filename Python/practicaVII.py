@@ -1,3 +1,4 @@
+import random
 '''
   =========================================
   EJERCICIO 1    
@@ -149,10 +150,6 @@ def CeroEnPosicionesPares(s: list)-> None:
     for i in range(0,len(s),2):
         s[i] = 0
 
-s = [1,2,4,5,6]
-CeroEnPosicionesPares(s)
-print(s)
-
 # 2
 def cero_en_posiciones_pares2 (s: list[int])-> list[int]:
     for i in range(1,len(s),2):
@@ -259,7 +256,6 @@ def pertenece_a_cada_uno3(matriz: list[int],e: int)-> bool:
         res += [pertenece(fila,e)]
     return res
 
-
 '''
   =========================================
   EJERCICIO 6
@@ -274,7 +270,119 @@ def es_matriz(m: list[list[int]])-> bool:
     return (len(m) > 0 and len(m[0]) > 0) and misma_long
 
 # 2
+def filas_ordenadas(matriz: list[list[int]], res: list[bool])-> None:
+    for n in range(len(matriz)):
+        res[n] = ordenados(matriz[n]) 
 
+# 3
+def columna(m: list[list[int]], c: int) -> list[int]:
+    columna: list = []
+    for fila in m:
+        columna.append(fila[c])
+    return columna
+
+# 4
+def columnas_ordenadas(m: list[list[int]]) -> list[bool]:
+    res: list[bool] = []
+    for c in range(len(m[0])):
+        res.append(ordenados(columna(m,c)))
+
+    return res
+
+# 5
+def transponer(m: list[list[int]]) -> list[list[int]]:
+    res: bool = []
+    for c in range(len(m[0])):
+        res.append(columna(m,c))
+
+    return res
+
+# 6
+def diagonal(m: list[list[int]]) -> list[int]:
+    diag: list[int] = []
+    for i in range(len(m)):
+        diag.append(m[i][i])
+    return diag
+
+def quien_gana_tateti(m: list[list[str]]) -> int:
+    ganador: int = 2
+    for fila in m:
+        if fila == ["X","X","X"]:
+            ganador: int = 1
+        elif fila == ["O","O","O"]:
+            ganador: int = 0
+
+    for c in range(len(m)):
+        if columna(m,c) == ["X","X","X"]:
+            gandor: int = 1
+        elif columna(m,c) == ["O","O","O"]:
+            ganador: int = 0
+
+    if diagonal(m) == ["X","X","X"]:
+        ganador: int = 1
+    elif diagonal(m) == ["O","O","O"]:
+        ganador: int = 0
+
+    return ganador
+
+'''
+  =========================================
+  EJERCICIO 7
+  =========================================
+'''
+
+def nombres() -> list[str]:
+    nombres: list[str] = []
+    valor = input("Ingrese un nombre (o presione Enter / escriba 'listo' para terminar): ")
+    
+    while valor != "listo" and valor != "":
+        nombres.append(valor)
+        valor = input("Ingrese otro nombre: ")
+
+    return nombres
+
+def historial_acciones() -> list[tuple[str, float]]:
+    historial: list[tuple[str, float]] = []
+    
+    accion = input('Ingrese la acción ("C" = Cargar, "D" = Descontar, "X" = Salir): ')
+    
+    while accion != "X":
+        if accion in ("C", "D"):
+            # Pedir el monto solo si la acción es válida
+            monto_str = input("Ingrese el monto: ")
+            try:
+                monto = float(monto_str)
+                historial.append((accion, monto))
+            except ValueError:
+                print("Error: El monto ingresado debe ser un número válido.")
+        else:
+            print("Acción no válida. Intente nuevamente.")
+            
+        accion = input('Nueva acción ("C", "D" o "X" para salir): ')
+        
+    return historial
+
+# 3
+def siete_y_medio() -> list[int]:
+    cuenta: int = 0
+    cartas: list[int] = []
+    carta_random = random.randint(1,12)
+
+    cuenta += carta_random
+    cartas.append(carta_random)
+    print(cuenta)
+    seguir = input("carta o plantarse: ")
+
+    if seguir == "carta":
+        carta_random = random.randint(1,12)
+        cuenta += carta_random
+        cartas.append(carta_random)
+        if cuenta > 7.5:
+            return 0
+        
+
+resultados = historial_acciones()
+print(resultados)
 '''
   =========================================
   EJERCICIO CLASE     
@@ -298,17 +406,5 @@ def sumar_toda_la_matriz(matriz: list[list[int]])-> int:
             suma += i
     return suma
 
-# Columna
-def columna(matriz: list[list[int]],col: int)-> list[int]:
-    columna = []
-    for i in matriz:
-        columna.append(i[col])
-    return columna
 
-# Columnas ordenadas
-def columnas_ordenadas(matriz: list[list[int]])-> list[bool]:
-    res = []
-    for col in range(len(matriz)):
-        res += [ordenados(columna(matriz,col))]
-    return res
 

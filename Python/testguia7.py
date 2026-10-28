@@ -81,7 +81,7 @@ class test_cero_en_posiciones_pares2(unittest.TestCase):
         self.assertEqual(cero_en_posiciones_pares2([1]),[1])
 
     def test_lista_vacia_god(self):
-        self.assertEqual(cero_en_posiciones_pares2([]),[])
+        self.assertEqual(cero_en_posiciones_pares2([("Sole", 9.5), ("Maxi", 8.0), ("Sole", 9.0),("Bernie", 10),("Juan",8.34)]),{'Sole': 9.25, 'Maxi': 8.0, 'Bernie': 10.0, 'Juan': 8.34})
 
 
 if __name__  == '__main__':
