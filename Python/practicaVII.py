@@ -379,10 +379,32 @@ def siete_y_medio() -> list[int]:
         cartas.append(carta_random)
         if cuenta > 7.5:
             return 0
+
+# 4
+def fortaleza(contraseña: str) -> str:
+    longitud: int = len(contraseña)
+    tiene_mays: bool = False
+    tiene_minus: bool = False
+    tiene_num: bool = False
+
+    for caracter in contraseña:
+        if "Z" >= caracter >= "A":
+            tiene_mays = True
+        elif "z" >= caracter >= "a":
+            tiene_minus = True
+        elif 0 <= int(caracter) <= 9:
+            tiene_num = True
         
 
-resultados = historial_acciones()
-print(resultados)
+    if longitud > 8 and tiene_minus and tiene_mays and tiene_num:
+        color: str = "VERDE"
+    elif longitud <= 8:
+        color:str = "ROJA"
+    else:
+        color:str = "AMARILLA"
+
+    return color
+        
 '''
   =========================================
   EJERCICIO CLASE     
