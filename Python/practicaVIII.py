@@ -1,4 +1,49 @@
 from typing import TextIO
+import random
+from queue import LifoQueue as Pila 
+'''
+  =========================================
+  EJERCICIO 1
+  =========================================
+'''
+# 1
+def generar_nros_al_azar(cantidad: int, desde: int, hasta: int) -> Pila[int]:
+    p = Pila()
+    for _ in range(cantidad):
+        p.put(random.randint(desde,hasta))
+
+    return p
+
+# 2
+def cantidad_elementos(p: Pila) -> int:
+    pila_aux: Pila = Pila()
+    contador: int = 0
+
+    while not p.empty():
+        elemento = p.get()
+        pila_aux.put(elemento)
+        contador += 1
+
+    while not pila_aux.empty():
+        elemento = pila_aux.get()
+        p.put(elemento)
+
+    return contador
+
+# 3
+
+
+p = Pila()
+p.put(1)
+p.put(2)
+p.put(3)
+print(p.queue)
+print(cantidad_elementos(p))
+print(p.queue)
+
+
+
+    
 '''
   =========================================
   EJERCICIO 16
