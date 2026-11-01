@@ -1,6 +1,7 @@
 from typing import TextIO
 import random
 from queue import LifoQueue as Pila 
+
 '''
   =========================================
   EJERCICIO 1
@@ -31,14 +32,84 @@ def cantidad_elementos(p: Pila) -> int:
     return contador
 
 # 3
+def buscar_el_maximo(p: Pila[int]) -> int:
+    pila_aux: Pila[int] = Pila()
+    maximo: int = p.get()
+    pila_aux.put(maximo)
 
+    while not p.empty():
+        actual: int = p.get()
+
+        if maximo < actual:
+            maximo = actual
+            pila_aux.put(actual)
+        else:
+            pila_aux.put(actual)
+
+    while not pila_aux.empty():
+        elemento = pila_aux.get()
+        p.put(elemento)
+
+    return maximo
+
+# 4 
+def buscar_nota_max(p: Pila[tuple[str,int]]) -> tuple[str,int]:
+    pila_aux: Pila[tuple[str,int]] = Pila()
+    maximo: int = p.get()
+    pila_aux.put(maximo)
+
+    while not p.empty():
+        tupla_actual: tuple[str,int] = p.get()
+
+        if maximo[1] < tupla_actual[1]:
+            maximo = tupla_actual
+            pila_aux.put(tupla_actual)
+        else:
+            pila_aux.put(tupla_actual)
+
+    while not pila_aux.empty():
+        elemento = pila_aux.get()
+        p.put(elemento)
+
+    return maximo
+
+# 5
+def esta_bien_balanceada(s: str) -> bool:
+    pila: Pila[str] = Pila()
+    balanceada: bool = True
+
+    for e in s:
+        if e == '(' or e == ')':
+            pila.put(e)
+
+    contador: int = 1
+    while not pila.empty():
+        elemento: str = pila.get()
+
+        if contador % 2 != 0:
+            if elemento != ')':
+                balanceada = False
+                contador += 1
+            else:
+                contador += 1
+        else: 
+            if elemento != '(':
+                balanceada = False
+                contador += 1
+            else:
+                contador += 1
+        
+        
+    return balanceada
+
+
+print(esta_bien_balanceada('9) * (10x + 6) - (2)'))
 
 p = Pila()
-p.put(1)
-p.put(2)
-p.put(3)
+p.put(('bernie',2))
+
 print(p.queue)
-print(cantidad_elementos(p))
+print(buscar_nota_max(p))
 print(p.queue)
 
 

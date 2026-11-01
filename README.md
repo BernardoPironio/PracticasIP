@@ -16,6 +16,7 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 ### Python
 * practicaVI.py: Introducción a Lenguaje Imperativo.
 * practicaVII.py: Funciones sobre listas (tipos complejos).
+* practicaVIII.py: Pilas, Colas, Diccionarios y Archivos.
 
 ## Funciones permitidas en Haskell
 
