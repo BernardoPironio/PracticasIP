@@ -1,13 +1,13 @@
 from typing import TextIO
 import random
 from queue import LifoQueue as Pila 
+from queue import Queue as Cola
 
 '''
   =========================================
   EJERCICIO 1
   =========================================
 '''
-# 1
 def generar_nros_al_azar(cantidad: int, desde: int, hasta: int) -> Pila[int]:
     p = Pila()
     for _ in range(cantidad):
@@ -15,7 +15,11 @@ def generar_nros_al_azar(cantidad: int, desde: int, hasta: int) -> Pila[int]:
 
     return p
 
-# 2
+'''
+  =========================================
+  EJERCICIO 2
+  =========================================
+'''
 def cantidad_elementos(p: Pila) -> int:
     pila_aux: Pila = Pila()
     contador: int = 0
@@ -31,7 +35,11 @@ def cantidad_elementos(p: Pila) -> int:
 
     return contador
 
-# 3
+'''
+  =========================================
+  EJERCICIO 3
+  =========================================
+'''
 def buscar_el_maximo(p: Pila[int]) -> int:
     pila_aux: Pila[int] = Pila()
     maximo: int = p.get()
@@ -52,7 +60,11 @@ def buscar_el_maximo(p: Pila[int]) -> int:
 
     return maximo
 
-# 4 
+'''
+  =========================================
+  EJERCICIO 4
+  =========================================
+'''
 def buscar_nota_max(p: Pila[tuple[str,int]]) -> tuple[str,int]:
     pila_aux: Pila[tuple[str,int]] = Pila()
     maximo: int = p.get()
@@ -73,48 +85,156 @@ def buscar_nota_max(p: Pila[tuple[str,int]]) -> tuple[str,int]:
 
     return maximo
 
-# 5
+'''
+  =========================================
+  EJERCICIO 5
+  =========================================
+'''
 def esta_bien_balanceada(s: str) -> bool:
-    pila: Pila[str] = Pila()
-    balanceada: bool = True
+    pila = Pila()
 
+    for caracter in s:
+
+        if caracter == '(':
+            pila.put(caracter) 
+        elif caracter == ')':
+            if pila.empty():
+                return False
+            pila.get()          
+            
+    return pila.empty()
+
+'''
+  =========================================
+  EJERCICIO 6
+  =========================================
+'''
+def evaluar_expresion(s: str) -> float:
+    resultado: str = Pila()
+    operadores = ['-','+','*','/']
     for e in s:
-        if e == '(' or e == ')':
-            pila.put(e)
-
-    contador: int = 1
-    while not pila.empty():
-        elemento: str = pila.get()
-
-        if contador % 2 != 0:
-            if elemento != ')':
-                balanceada = False
-                contador += 1
-            else:
-                contador += 1
+        if e not in operadores and e != ' ':
+            resultado.put(e)
+        elif e == '-':
+            segundo: int = int(resultado.get())
+            primero: int = int(resultado.get())
+            token: float = primero - segundo
+            resultado.put(token)
+        elif e == '+':
+            segundo: int = int(resultado.get())
+            primero: int = int(resultado.get())
+            token: float = primero + segundo
+            resultado.put(token)
+        elif e == '*':
+            segundo: int = int(resultado.get())
+            primero: int = int(resultado.get())
+            token: float = primero * segundo
+            resultado.put(token)
+        elif e == '/':
+            segundo: int = int(resultado.get())
+            primero: int = int(resultado.get())
+            token: float = primero / segundo
+            resultado.put(token)
         else: 
-            if elemento != '(':
-                balanceada = False
-                contador += 1
-            else:
-                contador += 1
+            pass
+    return resultado.get()
+
+'''
+  =========================================
+  EJERCICIO 7
+  =========================================
+'''
+def intercalar(p1: Pila, p2: Pila) -> Pila:
+    pila_aux: Pila = Pila()
+    intercalada: Pila = Pila()
+
+    while not p1.empty():
+        elemento1 = p1.get()
+        elemento2 = p2.get()
+        pila_aux.put(elemento2)
+        pila_aux.put(elemento1)
+
+    while not pila_aux.empty():
+        elemento = pila_aux.get()
+        intercalada.put(elemento)
         
+    return intercalada
+
+'''
+  =========================================
+  EJERCICIO 8
+  =========================================
+'''
+def generar_nros_al_azar(cantidad: int, desde: int, hasta: int) -> Cola:
+    cola: Cola = Cola()
+
+    for _ in range(cantidad):
+        cola.put(random.randint(desde,hasta))
+
+    return cola
+
+'''
+  =========================================
+  EJERCICIO 9
+  =========================================
+'''
+def cantidad_de_elementos(c: Cola) -> int:
+    cola_aux: Cola = Cola()
+    cantidad: int = 0
+
+    while not c.empty():
+        elemento = c.get()
+        cola_aux.put(elemento)
+        cantidad += 1
+
+    while not cola_aux.empty():
+        elemento = cola_aux.get()
+        c.put(elemento)
+
+    return cantidad
+
+'''
+  =========================================
+  EJERCICIO 10
+  =========================================
+'''
+def buscar_el_maximo(c: Cola) -> int:
+    cola_aux: Cola = Cola()
+    maximo: int = cola.get()
+    cola_aux.put(maximo)
+
+    while not c.empty():
+        proximo: int = c.get()
+
+        if maximo < proximo:
+            maximo = proximo
+
+        cola_aux.put(proximo)
+
+    while not cola_aux.empty():
+        elemento = cola_aux.get()
+        c.put(elemento)
+
+    return maximo
         
-    return balanceada
+'''
+  =========================================
+  EJERCICIO 11
+  =========================================
+'''
+
+cola = Cola()
+cola.put(1)
+cola.put(22)
+cola.put(3)
+cola.put(16)
+
+print(cola.queue)
+print(buscar_el_maximo(cola))
+print(cola.queue)
 
 
-print(esta_bien_balanceada('9) * (10x + 6) - (2)'))
 
-p = Pila()
-p.put(('bernie',2))
-
-print(p.queue)
-print(buscar_nota_max(p))
-print(p.queue)
-
-
-
-    
 '''
   =========================================
   EJERCICIO 16
