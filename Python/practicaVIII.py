@@ -371,8 +371,73 @@ def calcular_promedio_por_estudiante(notas: list[tuple[str, float]]) -> dict[str
   EJERCICIO 17
   =========================================
 '''
+# 1
+pila1 = Pila()
+pila1.put("linkedin")
+pila1.put("github")
+pila1.put("gitlab")
 
-        
+pila2 = Pila()
+pila2.put("dm")
+pila2.put("df")
+pila2.put("dc")
+
+historiales = {"bpiro":pila1,"lu": pila2}
+
+# 2
+def visitar_sitio(historiales: dict[str,Pila[str]],usuario: str,sitio: str) -> None:
+    if usuario in historiales.keys():
+        historiales[usuario].put(sitio)
+    elif usuario not in historiales.keys():
+        pila_aux = Pila()
+        pila_aux.put(sitio)
+        historiales[usuario] = pila_aux
+
+# 3
+def navegar_atras(historiales: dict[str,Pila[str]],usuario: str) -> str:
+    return historiales[usuario].get()
+
+'''
+  =========================================
+  EJERCICIO 18
+  =========================================
+'''
+inventario: dict[str,dict[str,float|int]] =  {'remera': {'precio': 999.99, 'cantidad': 3}}
+
+# 1
+def agregar_producto(inventario: dict[str,dict[str,float|int]], nombre: str, precio: float, cantidad:int) -> None:
+    inventario[nombre] = {'precio': precio,'cantidad':cantidad}
+
+agregar_producto(inventario,'kipa',10.4,3)
+print(inventario)
+
+# 2
+def actualizar_stock(inventario: dict[str,dict[str,float|int]], nombre:str, cantidad: int) -> None:
+    inventario[nombre]['cantidad'] = cantidad
+
+actualizar_stock(inventario,'kipa', 6)
+print(inventario)
+
+# 3
+def actualizar_precio(inventario: dict[str,dict[str,float|int]], nombre:str, precio: int) -> None:
+    inventario[nombre]['precio'] = precio
+
+actualizar_precio(inventario,'kipa', 6.2)
+print(inventario)
+
+# 4
+def calcular_valor_inventario(inventario: dict[str,dict[str,float|int]]) -> float:
+    suma: float = 0
+
+    for nombre in inventario.keys():
+        suma += inventario[nombre]['precio']*inventario[nombre]['cantidad']
+
+    return suma
+
+print(calcular_valor_inventario(inventario))
+
+
+
 '''
   =========================================
   EJERCICIO 19
