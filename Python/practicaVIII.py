@@ -222,18 +222,126 @@ def buscar_el_maximo(c: Cola) -> int:
   EJERCICIO 11
   =========================================
 '''
+def buscar_nota_minima(c: Cola[tuple[str,int]]) ->  tuple[str,int]:
+    cola_aux: Cola = Cola()
+    minimo: tuple[str,int] = c.get()
+    cola_aux.put(minimo)
 
-cola = Cola()
-cola.put(1)
-cola.put(22)
-cola.put(3)
-cola.put(16)
+    while not c.empty():
+        proximo: tuple[str,int] = c.get()
+        cola_aux.put(proximo)
 
-print(cola.queue)
-print(buscar_el_maximo(cola))
-print(cola.queue)
+        if minimo > proximo:
+            minimo = proximo
 
+    while not cola_aux.empty():
+        elemento = cola_aux.get()
+        c.put(elemento)
 
+    return minimo
+
+'''
+  =========================================
+  EJERCICIO 12
+  =========================================
+'''
+def intercalar(c1: Cola, c2: Cola) -> Cola:
+    intercalada: Cola = Cola()
+
+    while not c2.empty():
+        elemento1 = c1.get()
+        elemento2 = c2.get()
+
+        intercalada.put(elemento1)
+        intercalada.put(elemento2)
+
+    return intercalada
+
+'''
+  =========================================
+  EJERCICIO 13
+  =========================================
+'''
+# 1
+def armar_secuencia_de_bingo() -> Cola:
+    disponibles: list[int] = list(range(100))
+    cola: Cola = Cola()
+
+    while len(disponibles) > 0:
+        n = disponibles.pop(random.randint(0,len(disponibles)-1))
+        cola.put(n)
+
+    return cola
+
+# 2
+def jugar_carton_de_bingo(carton: list[int],bolillero: Cola[int]) -> int:
+    contador: int = 0
+    cantidad_salieron: int = 0
+
+    while cantidad_salieron != 12:
+        bola: int = bolillero.get()
+        contador += 1
+
+        if bola in carton:
+            cantidad_salieron += 1
+
+    return contador
+
+'''
+  =========================================
+  EJERCICIO 14
+  =========================================
+'''
+def pacientes_urgentes(c: Cola[tuple[int,str,str]]) -> int:
+    cola_aux: Cola = Cola()
+    contador: int = 0
+
+    while not c.empty():
+        elemento = c.get()
+        cola_aux.put(elemento)
+
+        if elemento[0] < 4:
+            contador += 1
+
+    while not cola_aux.empty():
+        elemento = cola_aux.get()
+        c.put(elemento)
+
+    return contador
+
+'''
+  =========================================
+  EJERCICIO 15
+  =========================================
+'''
+def atencion_clientes(c: Cola[tuple[str,int,bool,bool]]) -> Cola[tuple[str,int,bool,bool]]:
+    cola_aux: Cola = Cola()
+    cola_no_prioridad: Cola = Cola()
+    cola_no_preferencial: Cola = Cola()
+    nueva: Cola = Cola()
+
+    while not c.empty():
+        elemento = c.get()
+        cola_aux.put(elemento)
+
+        if not elemento[3]:
+            cola_no_prioridad.put(elemento)
+        else:
+            nueva.put(elemento)
+
+    while not cola_no_prioridad.empty():
+        elemento = cola_no_prioridad.get()
+
+        if not elemento[2]:
+            cola_no_preferencial.put(elemento)
+        else: 
+            nueva.put(elemento)
+
+    while not cola_no_preferencial.empty():
+        elemento = cola_no_preferencial.get()
+        nueva.put(elemento)
+
+    return nueva
 
 '''
   =========================================
@@ -257,6 +365,12 @@ def calcular_promedio_por_estudiante(notas: list[tuple[str, float]]) -> dict[str
             res[nombre] += n
         res[nombre] = res[nombre]/len(lista_notas_por_persona[nombre])
     return res
+
+'''
+  =========================================
+  EJERCICIO 17
+  =========================================
+'''
 
         
 '''
