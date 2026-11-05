@@ -200,7 +200,7 @@ def cantidad_de_elementos(c: Cola) -> int:
 '''
 def buscar_el_maximo(c: Cola) -> int:
     cola_aux: Cola = Cola()
-    maximo: int = cola.get()
+    maximo: int = cola_aux.get()
     cola_aux.put(maximo)
 
     while not c.empty():
@@ -408,22 +408,13 @@ inventario: dict[str,dict[str,float|int]] =  {'remera': {'precio': 999.99, 'cant
 def agregar_producto(inventario: dict[str,dict[str,float|int]], nombre: str, precio: float, cantidad:int) -> None:
     inventario[nombre] = {'precio': precio,'cantidad':cantidad}
 
-agregar_producto(inventario,'kipa',10.4,3)
-print(inventario)
-
 # 2
 def actualizar_stock(inventario: dict[str,dict[str,float|int]], nombre:str, cantidad: int) -> None:
     inventario[nombre]['cantidad'] = cantidad
 
-actualizar_stock(inventario,'kipa', 6)
-print(inventario)
-
 # 3
 def actualizar_precio(inventario: dict[str,dict[str,float|int]], nombre:str, precio: int) -> None:
     inventario[nombre]['precio'] = precio
-
-actualizar_precio(inventario,'kipa', 6.2)
-print(inventario)
 
 # 4
 def calcular_valor_inventario(inventario: dict[str,dict[str,float|int]]) -> float:
@@ -433,10 +424,6 @@ def calcular_valor_inventario(inventario: dict[str,dict[str,float|int]]) -> floa
         suma += inventario[nombre]['precio']*inventario[nombre]['cantidad']
 
     return suma
-
-print(calcular_valor_inventario(inventario))
-
-
 
 '''
   =========================================
@@ -450,6 +437,29 @@ def contar_lineas(nombre_archivo: str) -> int:
     archivo.close()
     cant_lineas: int = len(lineas)
     return cant_lineas
+
+# 2
+def existe_palbra(nombre_archivo: str, palabra: str) -> bool:
+    archivo: TextIO = open(nombre_archivo,'r')
+    lineas: list[str] = archivo.readlines()
+    archivo.close()
+    res: bool = False
+    for linea in lineas:
+        if palabra in linea:
+            res = True
+
+    return res
+
+# 3
+# def cantidad_de_apariciones(nombre_archivo: str, palabra: str) -> int:
+#     archivo: TextIO = open(nombre_archivo,'r')
+#     lineas: list[str] = archivo.readlines()
+#     archivo.close()
+
+#     contador: int = 0
+#     for i in lin
+
+
 
 '''
   =========================================
