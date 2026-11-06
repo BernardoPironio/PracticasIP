@@ -447,19 +447,86 @@ def existe_palbra(nombre_archivo: str, palabra: str) -> bool:
     for linea in lineas:
         if palabra in linea:
             res = True
-
     return res
 
 # 3
-# def cantidad_de_apariciones(nombre_archivo: str, palabra: str) -> int:
-#     archivo: TextIO = open(nombre_archivo,'r')
-#     lineas: list[str] = archivo.readlines()
-#     archivo.close()
+def separar_palabras(oracion: str) -> list[str]:
+    palabras: list[str] = []
+    i: int = 0
+    n: int = len(oracion)
+    
+    while i < n:
+        while i < n and oracion[i] == ' ':
+            i += 1
+            
+        if i < n:
+            palabra_actual: str = ""
+            
+            while i < n and oracion[i] != ' ':
+                palabra_actual += oracion[i]
+                i += 1
+                
+            palabras.append(palabra_actual)
+            
+    return palabras
 
-#     contador: int = 0
-#     for i in lin
+def cantidad_de_apariciones(nombre_archivo: str, palabra: str) -> int:
+    archivo: TextIO = open(nombre_archivo,'r')
+    lineas: list[str] = archivo.readlines()
+    archivo.close()
+    contador: int = 0
 
+    for linea in lineas:
+        for e in separar_palabras(linea):
+            if e == palabra:
+                contador += 1
 
+    return contador
+
+'''
+  =========================================
+  EJERCICIO 20
+  =========================================
+'''
+def agrupar_por_longitud(nombre_archivo: str) -> dict[int,int]:
+    archivo: TextIO = open(nombre_archivo,'r')
+    lineas: list[str] = archivo.readlines()
+    archivo.close()
+
+    res: dict[int,int] = {}
+
+    for linea in lineas:
+        for palabra in separar_palabras(linea):
+            if len(palabra) not in res.keys():
+                res[len(palabra)] = 1
+            else:
+                res[len(palabra)] += 1
+
+    return res
+
+'''
+  =========================================
+  EJERCICIO 21
+  =========================================
+'''
+def la_palabra_mas_frecuente(nombre_archivo: str) -> str:
+    archivo: TextIO = open(nombre_archivo,'r')
+    lineas: list[str] = archivo.readlines()
+    archivo.close()
+    cantidad_palabras: dict[str,int] = {}
+
+    for linea in lineas:
+        for palabra in separar_palabras(linea):
+            if palabra not in cantidad_palabras.keys():
+                cantidad_palabras[palabra] = 1
+            else:
+                cantidad_palabras[palabra] += 1
+
+    
+        
+    return cantidad_palabras
+
+print(la_palabra_mas_frecuente("archivo_con_comentarios.txt"))
 
 '''
   =========================================
