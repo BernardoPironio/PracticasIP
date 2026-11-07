@@ -290,5 +290,86 @@ class test_promedio_de_salidas(unittest.TestCase):
         }
         self.assertEqual(resultado, esperado)
 
+class test_tiempo_mas_rapido(unittest.TestCase):
+
+  def test_caso_general_multiples_validos(self):
+    # El tiempo más rápido es 30 (repetido). Debe devolver la de menor índice (1)
+    tiempos_salas = [45, 30, 50, 30]
+    resultado = tiempo_mas_rapido(tiempos_salas)
+    esperado = 1
+    self.assertEqual(resultado, esperado)
+
+  def test_invalidos_intercalados(self):
+    # Excluye 0 y 61. Entre los válidos (25 en ind 2 y 60 en ind 3), el menor es 25
+    tiempos_salas = [0, 61, 25, 60, 0]
+    resultado = tiempo_mas_rapido(tiempos_salas)
+    esperado = 2
+    self.assertEqual(resultado, esperado)
+
+  def test_unico_elemento_valido(self):
+    # Solo un tiempo válido entre 1 y 60 inclusivo
+    tiempos_salas = [0, 0, 42, 61]
+    resultado = tiempo_mas_rapido(tiempos_salas)
+    esperado = 2
+    self.assertEqual(resultado, esperado)
+
+  def test_minimo_al_inicio(self):
+    # El tiempo más rápido (15) está en la primera posición (índice 0)
+    tiempos_salas = [15, 55, 40, 20]
+    resultado = tiempo_mas_rapido(tiempos_salas)
+    esperado = 0
+    self.assertEqual(resultado, esperado)
+
+  def test_minimo_al_final(self):
+    # El tiempo más rápido (10) está en la última posición (índice 3)
+    tiempos_salas = [50, 45, 60, 10]
+    resultado = tiempo_mas_rapido(tiempos_salas)
+    esperado = 3
+    self.assertEqual(resultado, esperado)
+
+  def test_valores_limites_rango(self):
+    # Evalúa en las fronteras inclusivas del rango válido (1 y 60)
+    tiempos_salas = [60, 1, 35]
+    resultado = tiempo_mas_rapido(tiempos_salas)
+    esperado = 1
+    self.assertEqual(resultado, esperado)
+
+class test_racha_mas_larga(unittest.TestCase):
+
+  def test_racha_en_el_medio(self):
+    # Racha exitosa más larga en el medio ([30, 45, 20] de longitud 3)
+    tiempos = [0, 30, 45, 20, 61, 15]
+    resultado = racha_mas_larga(tiempos)
+    esperado = (1, 3)
+    self.assertEqual(resultado, esperado)
+
+  def test_empate_devuelve_primera(self):
+    # Hay dos rachas de igual longitud máxima (2): [10, 20] y [40, 50]. Debe devolver la primera (0, 1)
+    tiempos = [10, 20, 0, 40, 50]
+    resultado = racha_mas_larga(tiempos)
+    esperado = (0, 1)
+    self.assertEqual(resultado, esperado)
+
+  def test_racha_unica_de_un_elemento(self):
+    # Una única salida exitosa aislada por ceros y 61, la racha es de longitud 1 (índice 2 a 2)
+    tiempos = [0, 61, 42, 0, 61]
+    resultado = racha_mas_larga(tiempos)
+    esperado = (2, 2)
+    self.assertEqual(resultado, esperado)
+
+  def test_toda_la_lista_exitosa(self):
+    # Toda la secuencia completa es una racha exitosa
+    tiempos = [15, 30, 45, 60]
+    resultado = racha_mas_larga(tiempos)
+    esperado = (0, 3)
+    self.assertEqual(resultado, esperado)
+
+  def test_racha_al_final(self):
+    # La racha más larga se encuentra al final de la lista
+    tiempos = [0, 61, 10, 25, 40]
+    resultado = racha_mas_larga(tiempos)
+    esperado = (2, 4)
+    self.assertEqual(resultado, esperado)
+
 if __name__ == '__main__':
     unittest.main()

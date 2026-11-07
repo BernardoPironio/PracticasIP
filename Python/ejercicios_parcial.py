@@ -126,4 +126,43 @@ def promedio_de_salidas(registro: dict[str,list[int]]) -> dict[str,tuple[int,flo
   EJERCICIO 6
   =========================================
 '''
+def tiempo_mas_rapido(tiempos_salas: list[int]) -> int:
+    mas_rapido: int = 61
 
+    for i in range(len(tiempos_salas)):
+        if tiempos_salas[i] < mas_rapido and tiempos_salas[i] != 0:
+            mas_rapido = tiempos_salas[i]
+            mas_rapido_indice: int = i
+
+    return mas_rapido_indice
+    
+'''
+  =========================================
+  EJERCICIO 7
+  =========================================
+'''
+def racha_mas_larga(tiempos: list[int]) -> tuple[int,int]:
+    cantidad_max: int = 0
+    indicie_inicial: int = 0
+
+    for i in range(len(tiempos)):
+        contador: int = 0
+
+        while i + contador < len(tiempos) and 0 < tiempos[i+contador] < 61:
+            contador += 1
+
+        if contador > cantidad_max:
+            cantidad_max = contador 
+            indicie_inicial = i
+
+    return (indicie_inicial,indicie_inicial + cantidad_max - 1)
+
+print(racha_mas_larga([10, 20, 0, 40, 50]))
+
+'''
+  =========================================
+  EJERCICIO 8
+  =========================================
+'''
+def escape_en_solitario(amigos_por_sala: list[list[int]]) -> list[int]:
+    return 0
