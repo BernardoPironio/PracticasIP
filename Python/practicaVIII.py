@@ -227,6 +227,7 @@ def buscar_nota_minima(c: Cola[tuple[str,int]]) ->  tuple[str,int]:
     minimo: tuple[str,int] = c.get()
     cola_aux.put(minimo)
 
+
     while not c.empty():
         proximo: tuple[str,int] = c.get()
         cola_aux.put(proximo)
