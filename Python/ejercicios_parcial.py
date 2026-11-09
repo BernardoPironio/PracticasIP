@@ -1,3 +1,4 @@
+from queue import Queue as Cola
 '''
   =========================================
   EJERCICIO 1    
@@ -157,12 +158,196 @@ def racha_mas_larga(tiempos: list[int]) -> tuple[int,int]:
 
     return (indicie_inicial,indicie_inicial + cantidad_max - 1)
 
-print(racha_mas_larga([10, 20, 0, 40, 50]))
-
 '''
   =========================================
   EJERCICIO 8
   =========================================
 '''
 def escape_en_solitario(amigos_por_sala: list[list[int]]) -> list[int]:
-    return 0
+    res: list[int] = []
+
+    for sala in amigos_por_sala:
+        if sala[0] == sala[1] == sala[3] == 0 and sala[2] != 0:
+            res.append(amigos_por_sala.index(sala))
+
+    return res
+
+'''
+  =========================================
+  EJERCICIO 9
+  =========================================
+'''
+def torneo_de_gallinas(estrategias: dict[str,str]) -> dict[str,int]:
+    jugadores: list[str] = list(estrategias.keys())
+    res: dict[str,int] = {}
+
+    for jugador in jugadores:
+        jugada: str = estrategias[jugador]
+        puntos: int = 0
+
+        for otro in jugadores:
+
+             if jugada == "me desvío siempre" and jugada == estrategias[otro]:
+                 puntos -= 10 
+
+             elif jugada == "me desvío siempre":
+                 puntos -= 15
+
+             elif jugada == "me la banco y no me desvío" and jugada == estrategias[otro]:
+                 puntos -= 5
+
+             elif jugada == "me la banco y no me desvío":
+                 puntos += 10
+
+        if jugada == "me desvío siempre":
+            puntos += 10
+        else:
+            puntos += 5
+        
+        res[jugador] = puntos
+
+    return res
+   
+'''
+  =========================================
+  EJERCICIO 10
+  =========================================
+'''
+def reordenar_cola_priorizando_vips(fila_clientes: Cola[tuple[str,str]]) -> Cola[str]:
+    cola_aux: Cola[tuple[str,str]] = Cola()
+    cola_no_vips: Cola[str] = Cola()
+    res: Cola[str] = Cola()
+
+    while not fila_clientes.empty():
+        elemento = fila_clientes.get()
+        cola_aux.put(elemento)
+
+        if elemento[1] == "vip":
+            res.put(elemento[0])
+        else: 
+            cola_no_vips.put(elemento[0])
+
+    while not cola_no_vips.empty():
+        res.put(cola_no_vips.get())
+
+    while not cola_aux.empty():
+        fila_clientes.put(cola_aux.get())
+        
+    return res
+
+'''
+  =========================================
+  EJERCICIO 11
+  =========================================
+'''
+def es_palindormo(palabra: str) -> bool:
+    res: bool = True
+    
+    for letra in range(len(palabra)//2): 
+        una: str = palabra[letra]
+        otra: str = palabra[len(palabra) - 1 - letra] 
+        iguales: bool =  una == otra
+        res = res and iguales
+
+    return res
+
+def texto_desde(texto: str,desde:int) -> str:
+    res: str = ''
+
+    for i in range(desde,len(texto)):
+        res += texto[i]
+
+    return res
+
+def cuantos_sufijos_son_palindromos(texto: str) -> int:
+    contador: int = 0
+
+    for i in range(len(texto)):
+        if es_palindormo(texto_desde(texto,i)):
+            contador += 1
+
+    return contador
+
+'''
+  =========================================
+  EJERCICIO 12
+  =========================================
+'''
+def quien_gano_el_tateti_facilito(tablero: list[list[str]]) -> int:
+    gano_x: bool = False
+    gano_o: bool = False
+
+    for f in range(len(tablero) - 2):
+        for c in range(len(tablero)):
+            if tablero[f][c] == "X" and tablero[f + 1][c] == "X" and tablero[f + 2][c] == "X":
+                gano_x = True
+
+            if tablero[f][c] == "O" and tablero[f + 1][c] == "O" and tablero[f + 2][c] == "O":
+                gano_o = True
+
+    res: int = 0
+
+    if gano_x and gano_o:
+        res = 3
+    elif gano_o:
+        res = 2
+    elif gano_x:
+        res = 1
+
+    return res
+
+'''
+  =========================================
+  EJERCICIO 13
+  =========================================
+'''
+def orden_de_atencion(urgentes: Cola[int],postergables: Cola[int]) -> Cola[int]:
+    urgentes_aux: Cola[int] = Cola()
+    postergables_aux: Cola[int] = Cola()
+    res: Cola[int] = Cola()
+
+    while not urgentes.empty():
+        urgente = urgentes.get()
+        urgentes_aux.put(urgente)
+        res.put(urgente)
+
+        postergable = postergables.get()
+        postergables_aux.put(postergable)
+        res.put(postergable)
+
+    while not urgentes_aux.empty():
+        urgente = urgentes_aux.get()
+        urgentes.put(urgente)
+
+        postergable = postergables_aux.get()
+        postergables.put(postergable)
+
+    return res
+
+'''
+  =========================================
+  EJERCICIO 14
+  =========================================
+'''
+def alarma_epidemiologica(registros: list[tuple[int,str]], infecciosas: list[str], umbral: float) -> dict[str,float]:
+    res: dict[str,float] = {}
+
+    for enfermedad in infecciosas:
+        cantidad: int = 0
+
+        for registro in registros:
+            if registro[1] == enfermedad:
+                cantidad += 1
+
+        porcentaje: int = cantidad/len(registros)
+
+        if porcentaje >= umbral:
+            res[enfermedad] = porcentaje
+
+    return res
+
+'''
+  =========================================
+  EJERCICIO 15
+  =========================================
+'''

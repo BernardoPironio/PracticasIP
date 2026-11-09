@@ -371,5 +371,402 @@ class test_racha_mas_larga(unittest.TestCase):
     esperado = (2, 4)
     self.assertEqual(resultado, esperado)
 
+class TestEscapeEnSolitario(unittest.TestCase):
+    
+    def test_varias_salas_mixtas(self):
+        """Verifica una matriz con múltiples salas donde algunas cumplen y otras no."""
+        amigos_por_salas = [
+            [0, 0, 30, 0],   # Índice 0: Cumple (1°, 2° y 4° en 0; 3° fue en 30)
+            [10, 0, 20, 0],  # Índice 1: No cumple (el 1° amigo fue)
+            [0, 0, 0, 0],    # Índice 2: No cumple (el 3° amigo no fue: 0)[cite: 1]
+            [0, 0, 61, 0],   # Índice 3: Cumple (3° no salió: 61, pero fue)[cite: 1]
+            [0, 5, 40, 0]    # Índice 4: No cumple (el 2° amigo fue)[cite: 1]
+        ]
+        resultado = escape_en_solitario(amigos_por_salas)
+        self.assertEqual(resultado, [0, 3])
+
+    def test_ninguna_sala_cumple(self):
+        """Verifica el caso donde ninguna sala cumple la condición[cite: 1]."""
+        amigos_por_salas = [
+            [10, 20, 30, 40],
+            [0, 0, 0, 0],
+            [5, 0, 50, 0]
+        ]
+        resultado = escape_en_solitario(amigos_por_salas)
+        self.assertEqual(resultado, [])
+
+    def test_todas_las_salas_cumplen(self):
+        """Verifica una matriz donde todas las salas cumplen la condición[cite: 1]."""
+        amigos_por_salas = [
+            [0, 0, 25, 0],
+            [0, 0, 61, 0],  # No salió, pero fue
+            [0, 0, 1, 0]    # Salió rápido
+        ]
+        resultado = escape_en_solitario(amigos_por_salas)
+        self.assertEqual(resultado, [0, 1, 2])
+
+    def test_sala_unica_que_cumple(self):
+        """Verifica una matriz con una sola sala que sí cumple la condición[cite: 1]."""
+        amigos_por_salas = [
+            [0, 0, 45, 0]
+        ]
+        resultado = escape_en_solitario(amigos_por_salas)
+        self.assertEqual(resultado, [0])
+
+    def test_sala_unica_que_no_cumple(self):
+        """Verifica una matriz con una sola sala donde el tercer amigo tampoco fue[cite: 1]."""
+        amigos_por_salas = [
+            [0, 0, 0, 0]
+        ]
+        resultado = escape_en_solitario(amigos_por_salas)
+        self.assertEqual(resultado, [])
+
+class TestTorneoDeGallinas(unittest.TestCase):
+    
+    def test_dos_jugadores_mixtos(self):
+        """Verifica un torneo básico de 2 jugadores con estrategias opuestas[cite: 2]."""
+        estrategias = {
+            "Ana": "me desvío siempre",
+            "Beto": "me la banco y no me desvío"
+        }
+        # Ana se desvía (-15), Beto no se desvía (+10)[cite: 2]
+        resultado = torneo_de_gallinas(estrategias)
+        esperado = {
+            "Ana": -15,
+            "Beto": 10
+        }
+        self.assertEqual(resultado, esperado)
+
+    def test_todos_se_desvian(self):
+        """Verifica un torneo donde todos eligen desviarse siempre[cite: 2]."""
+        estrategias = {
+            "Ana": "me desvío siempre",
+            "Beto": "me desvío siempre",
+            "Carlos": "me desvío siempre"
+        }
+        # Hay 3 enfrentamientos en total: (Ana-Beto, Ana-Carlos, Beto-Carlos).
+        # En cada uno ambos pierden 10 puntos, por lo que cada jugador acumula -20[cite: 2].
+        resultado = torneo_de_gallinas(estrategias)
+        esperado = {
+            "Ana": -20,
+            "Beto": -20,
+            "Carlos": -20
+        }
+        self.assertEqual(resultado, esperado)
+
+    def test_todos_se_la_bancan(self):
+        """Verifica un torneo donde todos deciden no desviarse nunca[cite: 2]."""
+        estrategias = {
+            "Ana": "me la banco y no me desvío",
+            "Beto": "me la banco y no me desvío",
+            "Carlos": "me la banco y no me desvío"
+        }
+        # 3 enfrentamientos. En cada choque ambos pierden 5 puntos -> cada uno acumula -10[cite: 2].
+        resultado = torneo_de_gallinas(estrategias)
+        esperado = {
+            "Ana": -10,
+            "Beto": -10,
+            "Carlos": -10
+        }
+        self.assertEqual(resultado, esperado)
+
+    def test_torneo_mixto_varios_jugadores(self):
+        """Verifica un escenario heterogéneo con múltiples jugadores y distintas combinaciones[cite: 2]."""
+        estrategias = {
+            "Ana": "me desvío siempre",
+            "Beto": "me la banco y no me desvío",
+            "Carlos": "me desvío siempre"
+        }
+        # Enfrentamientos:
+        # 1. Ana (desvía) vs Beto (no desvía) -> Ana: -15, Beto: +10[cite: 2]
+        # 2. Ana (desvía) vs Carlos (desvía) -> Ana: -10, Carlos: -10[cite: 2]
+        # 3. Beto (no desvía) vs Carlos (desvía) -> Beto: +10, Carlos: -15[cite: 2]
+        # Totales:
+        # Ana = -15 + (-10) = -25
+        # Beto = 10 + 10 = 20
+        # Carlos = -10 + (-15) = -25
+        resultado = torneo_de_gallinas(estrategias)
+        esperado = {
+            "Ana": -25,
+            "Beto": 20,
+            "Carlos": -25
+        }
+        self.assertEqual(resultado, esperado)
+
+# Función auxiliar interna solo para comparar el contenido de las colas en los tests
+def _cola_a_lista(cola: Cola) -> list:
+    elementos = []
+    aux = Cola()
+    while not cola.empty():
+        elem = cola.get()
+        elementos.append(elem)
+        aux.put(elem)
+    while not aux.empty():
+        cola.put(aux.get())
+    return elementos
+
+class TestColaEnElBanco(unittest.TestCase):
+    
+    def test_reordenar_mixto(self):
+        """Verifica una cola con clientes VIP y comunes intercalados[cite: 3]."""
+        fila_original = Cola()
+        datos_entrada = [("Ana", "común"), ("Beto", "vip"), ("Carlos", "común"), ("Diana", "vip")]
+        for item in datos_entrada:
+            fila_original.put(item)
+            
+        res = reordenar_cola_priorizando_vips(fila_original)
+        
+        # Los VIPs deben quedar primero manteniendo su orden, seguidos de los comunes[cite: 3]
+        self.assertEqual(_cola_a_lista(res), ["Beto", "Diana", "Ana", "Carlos"])
+        
+        # Corroboramos que la cola original (parámetro in) NO se modificó
+        self.assertEqual(_cola_a_lista(fila_original), datos_entrada)
+
+    def test_solo_vips(self):
+        """Verifica una cola donde todos los clientes son VIP[cite: 3]."""
+        fila_original = Cola()
+        datos_entrada = [("Zoe", "vip"), ("Julian", "vip"), ("Lucía", "vip")]
+        for item in datos_entrada:
+            fila_original.put(item)
+            
+        res = reordenar_cola_priorizando_vips(fila_original)
+        
+        self.assertEqual(_cola_a_lista(res), ["Zoe", "Julian", "Lucía"])
+        self.assertEqual(_cola_a_lista(fila_original), datos_entrada)
+
+    def test_solo_comunes(self):
+        """Verifica una cola donde todos los clientes son comunes[cite: 3]."""
+        fila_original = Cola()
+        datos_entrada = [("Pedro", "común"), ("Sofía", "común")]
+        for item in datos_entrada:
+            fila_original.put(item)
+            
+        res = reordenar_cola_priorizando_vips(fila_original)
+        
+        self.assertEqual(_cola_a_lista(res), ["Pedro", "Sofía"])
+        self.assertEqual(_cola_a_lista(fila_original), datos_entrada)
+
+    def test_orden_relativo_respetado(self):
+        """Verifica que el orden interno de cada categoría se mantenga estricto[cite: 3]."""
+        fila_original = Cola()
+        datos_entrada = [
+            ("Cliente1", "común"),
+            ("VIP1", "vip"),
+            ("Cliente2", "común"),
+            ("VIP2", "vip"),
+            ("VIP3", "vip")
+        ]
+        for item in datos_entrada:
+            fila_original.put(item)
+            
+        res = reordenar_cola_priorizando_vips(fila_original)
+        
+        self.assertEqual(_cola_a_lista(res), ["VIP1", "VIP2", "VIP3", "Cliente1", "Cliente2"])
+        self.assertEqual(_cola_a_lista(fila_original), datos_entrada)
+
+class test_cuantos_sufijos_son_palindromos(unittest.TestCase):
+
+    def test_ejemplo_consigna(self):
+        # Ej: "Diego" -> sufijos: "Diego", "iego", "ego", "go", "o"
+        # De estos, solo "o" es palíndromo (longitud 1) -> Total: 1
+        texto = "Diego"
+        resultado = cuantos_sufijos_son_palindromos(texto)
+        esperado = 1
+        self.assertEqual(resultado, esperado)
+
+    def test_sufijos_neuquen(self):
+        # Texto: "neuquen" -> sufijos: 
+        # "neuquen" (sí, es palíndromo), "euquen" (no), "uquen" (no), 
+        # "quen" (no), "uen" (no), "en" (no), "n" (sí, una sola letra) -> Total: 2
+        texto = "neuquen"
+        resultado = cuantos_sufijos_son_palindromos(texto)
+        esperado = 2
+        self.assertEqual(resultado, esperado)
+
+    def test_todos_palindromos(self):
+        # Texto: "aba" -> sufijos: "aba" (sí), "ba" (no), "a" (sí) -> Total: 2
+        texto = "aba"
+        resultado = cuantos_sufijos_son_palindromos(texto)
+        esperado = 2
+        self.assertEqual(resultado, esperado)
+
+    def test_una_sola_letra(self):
+        # Texto: "a" -> sufijos: "a" (sí) -> Total: 1
+        texto = "a"
+        resultado = cuantos_sufijos_son_palindromos(texto)
+        esperado = 1
+        self.assertEqual(resultado, esperado)
+
+class test_quien_gano_el_tateti_facilito(unittest.TestCase):
+
+    def test_gana_ana(self):
+        # Tablero de 5x5 donde Ana ("X") consigue 3 seguidas en forma vertical (columna 1)
+        # Res esperado: 1 (gana Ana)
+        tablero = [
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", "X"],
+            [" ", " ", " ", " ", "X"],
+            [" ", " ", " ", " ", "X"]
+        ]
+        resultado = quien_gano_el_tateti_facilito(tablero)
+        esperado = 1
+        self.assertEqual(resultado, esperado)
+
+    def test_gana_beto(self):
+        # Tablero de 5x5 donde Beto ("O") consigue 3 seguidas en forma vertical (columna 2)
+        # Res esperado: 2 (gana Beto)
+        tablero = [
+            ["X", " ", "O", " ", " "],
+            ["X", " ", "O", " ", " "],
+            [" ", " ", "O", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "]
+        ]
+        resultado = quien_gano_el_tateti_facilito(tablero)
+        esperado = 2
+        self.assertEqual(resultado, esperado)
+
+    def test_empate_o_en_curso(self):
+        # Tablero de 5x5 sin tres en raya vertical para nadie
+        # Res esperado: 0 (nadie ganó)
+        tablero = [
+            ["X", "O", " ", " ", " "],
+            [" ", "O", "X", " ", " "],
+            ["X", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "]
+        ]
+        resultado = quien_gano_el_tateti_facilito(tablero)
+        esperado = 0
+        self.assertEqual(resultado, esperado)
+
+    def test_trampa_de_beto(self):
+        # Tablero donde Ana gana verticalmente y Beto también hace 3 verticales después (hizo trampa)
+        # Res esperado: 3 (ganaron ambos, evidencia trampa)
+        tablero = [
+            ["X", "O", " ", " ", " "],
+            ["X", "O", " ", " ", " "],
+            ["X", "O", " ", " ", " "],
+            [" ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " "]
+        ]
+        resultado = quien_gano_el_tateti_facilito(tablero)
+        esperado = 3
+        self.assertEqual(resultado, esperado)
+
+class test_orden_de_atencion(unittest.TestCase):
+
+    def test_intercalado_simple(self):
+        # Urgentes: [1, 2] | Postergables: [10, 20]
+        # Esperado: 1, 10, 2, 20
+        urgentes = Cola()
+        for x in [1, 2]:
+            urgentes.put(x)
+
+        postergables = Cola()
+        for x in [10, 20]:
+            postergables.put(x)
+
+        resultado = orden_de_atencion(urgentes, postergables)
+        
+        esperado = Cola()
+        for x in [1, 10, 2, 20]:
+            esperado.put(x)
+
+        self.assertEqual(list(resultado.queue), list(esperado.queue))
+
+    def test_un_solo_elemento(self):
+        # Urgentes: [5] | Postergables: [99]
+        # Esperado: 5, 99
+        urgentes = Cola()
+        urgentes.put(5)
+
+        postergables = Cola()
+        postergables.put(99)
+
+        resultado = orden_de_atencion(urgentes, postergables)
+        
+        esperado = Cola()
+        for x in [5, 99]:
+            esperado.put(x)
+
+        self.assertEqual(list(resultado.queue), list(esperado.queue))
+
+    def test_varios_elementos(self):
+        # Urgentes: [100, 200, 300] | Postergables: [1, 2, 3]
+        # Esperado: 100, 1, 200, 2, 300, 3
+        urgentes = Cola()
+        for x in [100, 200, 300]:
+            urgentes.put(x)
+
+        postergables = Cola()
+        for x in [1, 2, 3]:
+            postergables.put(x)
+
+        resultado = orden_de_atencion(urgentes, postergables)
+        
+        esperado = Cola()
+        for x in [100, 1, 200, 2, 300, 3]:
+            esperado.put(x)
+
+        self.assertEqual(list(resultado.queue), list(esperado.queue))
+
+class test_alarma_epidemiologica(unittest.TestCase):
+
+    def test_supera_umbral(self):
+        # Registros: 4 atenciones en total
+        # - "gripe": 3 pacientes (75% o 0.75)
+        # - "covid": 1 paciente (25% o 0.25)
+        # Infecciosas: ["gripe", "covid"]
+        # Umbral: 0.5 (50%)
+        # Esperado: solo "gripe" supera el umbral (0.75)
+        registros = [
+            (101, "gripe"),
+            (102, "gripe"),
+            (103, "gripe"),
+            (104, "covid")
+        ]
+        infecciosas = ["gripe", "covid"]
+        umbral = 0.5
+
+        resultado = alarma_epidemiologica(registros, infecciosas, umbral)
+        esperado = {"gripe": 0.75}
+
+        self.assertEqual(resultado, esperado)
+
+    def test_ninguna_supera_umbral(self):
+        # Umbral alto (0.8), ninguna enfermedad alcanza el 80% de los casos
+        registros = [
+            (1, "gripe"),
+            (2, "gripe"),
+            (3, "dengue"),
+            (4, "covid")
+        ]
+        infecciosas = ["gripe", "dengue", "covid"]
+        umbral = 0.8
+
+        resultado = alarma_epidemiologica(registros, infecciosas, umbral)
+        esperado = {}
+
+        self.assertEqual(resultado, esperado)
+
+    def test_solo_enfermedades_infecciosas(self):
+        # Hay registros de una enfermedad que NO está en la lista de infecciosas ("resfrio").
+        # No debe aparecer en el resultado aunque supere el umbral.
+        registros = [
+            (1, "resfrio"),
+            (2, "resfrio"),
+            (3, "resfrio"),
+            (4, "gripe")
+        ]
+        infecciosas = ["gripe"]
+        umbral = 0.2
+
+        resultado = alarma_epidemiologica(registros, infecciosas, umbral)
+        esperado = {"gripe": 0.25}  # 1 de 4 registros para "gripe" (25%)
+
+        self.assertEqual(resultado, esperado)
+
 if __name__ == '__main__':
     unittest.main()
