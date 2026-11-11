@@ -527,112 +527,208 @@ def la_palabra_mas_frecuente(nombre_archivo: str) -> str:
         
     return cantidad_palabras
 
-print(la_palabra_mas_frecuente("archivo_con_comentarios.txt"))
-
 '''
   =========================================
   EJERCICIO 22
   =========================================
 '''
-def es_comentario(linea: str):
-    if linea[0] == "#":
-        res: bool = True
-
-    for caracter in linea:
-        if caracter != " ":
-            pass
-        elif caracter == "#":
-            res: bool = False
-            
-
-    return res
-
-def clonar_sin_comentarios(nombre_archivo_entrada: str,nombre_archivo_salida: str) -> None:
-    archivo_r: TextIO = open(nombre_archivo_entrada, 'r')
-    archivo_w: TextIO = open(nombre_archivo_salida,'w')
-    lineas: list[str] = archivo_r.readlines()
-    archivo_r.close()
-
-
-
-    archivo_w.close()
-
-'''
-  =========================================
-  EJERCICIO 20
-  =========================================
-'''
-def palabras_de_linea(linea: str) -> list[str]:
-    palabras = []
-    palabra = "" 
+def clonar_sin_comentarios(nombre_archivo_entrada, nombre_archivo_salida):
+    entrada = open(nombre_archivo_entrada)
+    salida = open(nombre_archivo_salida, 'w')
     
-    for caracter in linea:
-        if caracter != " ":
-            palabra += caracter
-        elif palabra != "" and palabra != " " and palabra != "\n":
-            palabras.append(palabra)
-            palabra = ""
+    for linea in entrada:
+        es_comentario = False
+        i = 0
+        while i < len(linea) and linea[i] == ' ':
+            i = i + 1
             
-    if palabra != "":
-        palabras.append(palabra)
+        if i < len(linea) and linea[i] == '#':
+            es_comentario = True
             
-    return palabras
+        if not es_comentario:
+            salida.write(linea)
+            
+    entrada.close()
+    salida.close()
 
+'''
+  =========================================
+  EJERCICIO 23
+  =========================================
+'''
+def invertir_lineas(nombre_archivo_entrada, nombre_archivo_salida):
+    entrada = open(nombre_archivo_entrada)
+    salida = open(nombre_archivo_salida, 'w')
+    
+    lineas = []
+    for linea in entrada:
+        lineas = lineas + [linea]
+        
+    i = len(lineas) - 1
+    while i >= 0:
+        salida.write(lineas[i])
+        i = i - 1
+        
+    entrada.close()
+    salida.close()
 
-def cant_por_linea(linea: str):
-    dic: dict = {}
-
-    for palabra in palabras_de_linea(linea):
-        if len(palabra) not in dic.keys():
-            dic[len(palabra)] = 1
-        else:
-            dic[len(palabra)] += 1 
-
-    return dic
-
-def prueba(nombre_archivo:str):
-    archivo: TextIO = open(nombre_archivo,'r')
-    lineas = archivo.readlines()
-    list = []
-    for linea in lineas:
-        list.append(palabras_de_linea(linea))
-    return list
-
-
-def agrupar_por_longitud(nombre_archivo: str) -> dict:
-    archivo: TextIO = open(nombre_archivo, 'r')
-    lineas: list[str] = archivo.readlines()
+'''
+  =========================================
+  EJERCICIO 24
+  =========================================
+'''
+def agregar_frase_al_final(nombre_archivo, frase):
+    archivo = open(nombre_archivo, 'a')
+    archivo.write(frase + '\n')
     archivo.close()
 
-    dic: dict = {}
-    for linea in lineas:
-        for palabra in palabras_de_linea(linea):
-            if len(palabra) not in dic.keys():
-                dic[len(palabra)] = 1
-            else:
-                dic[len(palabra)] += 1
-
-    return dic
-
-#print(prueba("archivo_con_comentarios.txt"))
-#print(agrupar_por_longitud("archivo_con_comentarios.txt"))
-
 '''
   =========================================
-  EJERCICIO 21
+  EJERCICIO 25
   =========================================
 '''
-def la_palabra_mas_frecuenta(nombre_archivo: str) -> str:
-    archivo: TextIO = open(nombre_archivo,'r')
-    lineas: list[str] = archivo.readlines()
-
-    dic: dict = {}
-    for linea in lineas:
-        for palabra in palabras_de_linea(linea):
-            if palabra not in dic.keys():
-                dic[palabra] = 1 
-            else:
-                dic[palabra] += 1
-
+def agregar_frase_al_principio(nombre_archivo, frase):
+    archivo = open(nombre_archivo)
+    lineas = []
+    for linea in archivo:
+        lineas = lineas + [linea]
+    archivo.close()
     
+    archivo = open(nombre_archivo, 'w')
+    archivo.write(frase + '\n')
+    
+    i = 0
+    while i < len(lineas):
+        archivo.write(lineas[i])
+        i = i + 1
+        
+    archivo.close()
 
+'''
+  =========================================
+  EJERCICIO 26
+  =========================================
+'''
+def listar_textos_de_archivo(nombre_archivo):
+    archivo = open(nombre_archivo, 'rb')
+    contenido = archivo.read()
+    archivo.close()
+    
+    textos = []
+    texto_actual = ""
+    
+    i = 0
+    while i < len(contenido):
+        b = contenido[i]
+        c = chr(b)
+        
+        es_legible = (
+            (c >= '0' and c <= '9') or
+            (c >= 'A' and c <= 'Z') or
+            (c >= 'a' and c <= 'z') or
+            c == ' ' or
+            c == '_'
+        )
+        
+        if es_legible:
+            texto_actual = texto_actual + c
+        else:
+            if len(texto_actual) >= 5:
+                textos = textos + [texto_actual]
+            texto_actual = ""
+            
+        i = i + 1
+        
+    if len(texto_actual) >= 5:
+        textos = textos + [texto_actual]
+        
+    return textos
+
+'''
+  =========================================
+  EJERCICIO 27
+  =========================================
+'''
+def promedio_estudiante(notas_de_estudiantes, lu):
+    suma = 0.0
+    cantidad = 0
+    
+    i = 0
+    while i < len(notas_de_estudiantes):
+        linea = notas_de_estudiantes[i]
+        if linea.endswith('\n'):
+            linea = linea[:-1]
+            
+        if len(linea) > 0:
+            partes = []
+            parte_actual = ""
+            j = 0
+            while j < len(linea):
+                if linea[j] == ',':
+                    partes = partes + [parte_actual]
+                    parte_actual = ""
+                else:
+                    parte_actual = parte_actual + linea[j]
+                j = j + 1
+            partes = partes + [parte_actual]
+            
+            if len(partes) >= 4 and partes[0] == lu:
+                nota = float(partes[3])
+                suma = suma + nota
+                cantidad = cantidad + 1
+                
+        i = i + 1
+        
+    return suma / cantidad
+
+
+def calcular_promedio_por_estudiante(nombre_archivo_notas, nombre_archivo_promedios):
+    archivo_notas = open(nombre_archivo_notas)
+    notas_de_estudiantes = []
+    for linea in archivo_notas:
+        notas_de_estudiantes = notas_de_estudiantes + [linea]
+    archivo_notas.close()
+    
+    lus_procesadas = []
+    i = 0
+    while i < len(notas_de_estudiantes):
+        linea = notas_de_estudiantes[i]
+        if linea.endswith('\n'):
+            linea = linea[:-1]
+            
+        if len(linea) > 0:
+            partes = []
+            parte_actual = ""
+            j = 0
+            while j < len(linea):
+                if linea[j] == ',':
+                    partes = partes + [parte_actual]
+                    parte_actual = ""
+                else:
+                    parte_actual = parte_actual + linea[j]
+                j = j + 1
+            partes = partes + [parte_actual]
+            
+            if len(partes) >= 4:
+                lu = partes[0]
+                ya_esta = False
+                k = 0
+                while k < len(lus_procesadas):
+                    if lus_procesadas[k] == lu:
+                        ya_esta = True
+                    k = k + 1
+                if not ya_esta:
+                    lus_procesadas = lus_procesadas + [lu]
+                    
+        i = i + 1
+        
+    archivo_promedios = open(nombre_archivo_promedios, 'w')
+    
+    i = 0
+    while i < len(lus_procesadas):
+        lu = lus_procesadas[i]
+        prom = promedio_estudiante(notas_de_estudiantes, lu)
+        archivo_promedios.write(lu + ',' + str(prom) + '\n')
+        i = i + 1
+        
+    archivo_promedios.close()

@@ -351,3 +351,51 @@ def alarma_epidemiologica(registros: list[tuple[int,str]], infecciosas: list[str
   EJERCICIO 15
   =========================================
 '''
+def suma_lista(lista: list[int]) -> int:
+    res:int = 0
+    for i in lista:
+        res += i
+    return res
+
+def empleados_del_mes(horas: dict[int,list[int]]) -> list[int]:
+    maximo_horas: int = 0
+    empleados_del_mes: list[int] = []
+
+    for empleado in horas.keys():
+        horas_totales: int = suma_lista(horas[empleado])
+
+        if horas_totales >= maximo_horas:
+            maximo_horas = horas_totales
+
+    for empleado in horas.keys():
+        horas_totales: int = suma_lista(horas[empleado])
+        if horas_totales == maximo_horas:
+            empleados_del_mes.append(empleado)
+
+    return empleados_del_mes
+
+'''
+  =========================================
+  EJERCICIO 16
+  =========================================
+'''
+def nivel_de_ocupacion(camas_por_piso: list[list[bool]]) -> list[float]:
+    res: list[float] = []
+    camas_totales: int = len(camas_por_piso[0])
+
+    for piso in camas_por_piso:
+        cantidad_piso: int = 0
+
+        for cama in piso:
+            if cama:
+                cantidad_piso += 1
+
+        res.append(cantidad_piso/camas_totales)   
+
+    return res
+
+camas_por_piso = [[True,False,False,True],
+                 [True,False,False,True],
+                 [True,False,False,False],
+                 [False,False,False,False],
+                 [True,True,True,True]]

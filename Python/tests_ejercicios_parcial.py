@@ -768,5 +768,121 @@ class test_alarma_epidemiologica(unittest.TestCase):
 
         self.assertEqual(resultado, esperado)
 
+class TestEmpleadosDelMes(unittest.TestCase):
+
+    def test_diccionario_vacio(self):
+        """Caso borde: si no hay empleados registrados, la lista de ganadores es vacía."""
+        horas = {}
+        resultado = empleados_del_mes(horas)
+        self.assertEqual(resultado, [])
+
+    def test_un_solo_empleado(self):
+        """Un solo empleado registrado siempre resulta ser el ganador."""
+        horas = {101: [8, 8, 8]}
+        resultado = empleados_del_mes(horas)
+        self.assertEqual(resultado, [101])
+
+    def test_ganador_unico(self):
+        """Varios empleados con distintas horas acumuladas donde hay un único ganador claro."""
+        horas = {
+            1: [4, 4, 4],    # Total: 12
+            2: [8, 8, 8],    # Total: 24 (Ganador)
+            3: [6, 6]        # Total: 12
+        }
+        resultado = empleados_del_mes(horas)
+        self.assertEqual(resultado, [2])
+
+    def test_empate_multiples_ganadores(self):
+        """Dos o más empleados empatan en la cantidad máxima de horas trabajadas."""
+        horas = {
+            1: [10, 10],     # Total: 20 (Ganador)
+            2: [5, 5, 5],    # Total: 15
+            3: [8, 12]       # Total: 20 (Ganador)
+        }
+        resultado = empleados_del_mes(horas)
+        # Usamos assertCountEqual para verificar que contiene los mismos elementos sin importar el orden
+        self.assertCountEqual(resultado, [1, 3])
+
+    def test_todos_empatados(self):
+        """Todos los empleados del diccionario acumulan la misma cantidad total de horas."""
+        horas = {
+            10: [5, 5],      # Total: 10
+            20: [10],        # Total: 10
+            30: [2, 3, 5]    # Total: 10
+        }
+        resultado = empleados_del_mes(horas)
+        self.assertCountEqual(resultado, [10, 20, 30])
+
+    def test_listas_de_distinta_longitud(self):
+        """Compara empleados con diferente cantidad de días trabajados."""
+        horas = {
+            1: [1, 1, 1, 1, 1, 1, 1], # 7 días de 1 hora = 7
+            2: [12]                   # 1 día de 12 horas = 12 (Ganador)
+        }
+        resultado = empleados_del_mes(horas)
+        self.assertEqual(resultado, [2])
+
+    def test_empleados_con_horas_cero(self):
+        """Cumple con el requiere (ninguna lista es vacía), pero la lista puede contener ceros."""
+        horas = {
+            1: [0, 0, 0],    # Total: 0
+            2: [0, 1, 0]     # Total: 1 (Ganador)
+        }
+        resultado = empleados_del_mes(horas)
+        self.assertEqual(resultado, [2])
+
+class TestNivelDeOcupacion(unittest.TestCase):
+
+    def test_un_piso_todas_libres(self):
+        """Un único piso donde todas las camas están libres (False)."""
+        camas_por_piso = [
+            [False, False, False]
+        ]
+        resultado = nivel_de_ocupacion(camas_por_piso)
+        self.assertEqual(resultado, [0.0])
+
+    def test_un_piso_todas_ocupadas(self):
+        """Un único piso donde todas las camas están ocupadas (True)."""
+        camas_por_piso = [
+            [True, True]
+        ]
+        resultado = nivel_de_ocupacion(camas_por_piso)
+        self.assertEqual(resultado, [1.0])
+
+    def test_un_piso_ocupacion_parcial(self):
+        """Un único piso con una proporción mixta de camas ocupadas y libres."""
+        camas_por_piso = [
+            [True, False, True, False] # 2 ocupadas de 4 -> 0.5
+        ]
+        resultado = nivel_de_ocupacion(camas_por_piso)
+        # Usamos assertAlmostEqual por el manejo de números flotantes (reales)
+        self.assertEqual(len(resultado), 1)
+        self.assertAlmostEqual(resultado[0], 0.5)
+
+    def test_multiples_pisos_variados(self):
+        """Varios pisos con diferentes niveles de ocupación y una sola cama por piso."""
+        camas_por_piso = [
+            [True],          # Piso 0: 1 de 1 -> 1.0
+            [False]          # Piso 1: 0 de 1 -> 0.0
+        ]
+        resultado = nivel_de_ocupacion(camas_por_piso)
+        self.assertEqual(len(resultado), 2)
+        self.assertAlmostEqual(resultado[0], 1.0)
+        self.assertAlmostEqual(resultado[1], 0.0)
+
+    def test_hospital_grande_multiples_pisos(self):
+        """Matriz representativa de un hospital con varios pisos y varias camas."""
+        camas_por_piso = [
+            [True, True, False, False],   # Piso 0: 2 de 4 -> 0.5
+            [False, False, False, False], # Piso 1: 0 de 4 -> 0.0
+            [True, True, True, True]      # Piso 2: 4 de 4 -> 1.0
+        ]
+        resultado = nivel_de_ocupacion(camas_por_piso)
+        
+        esperado = [0.5, 0.0, 1.0]
+        self.assertEqual(len(resultado), len(esperado))
+        for res, esp in zip(resultado, esperado):
+            self.assertAlmostEqual(res, esp)
+
 if __name__ == '__main__':
     unittest.main()

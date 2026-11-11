@@ -17,6 +17,8 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 * practicaVI.py: Introducción a Lenguaje Imperativo.
 * practicaVII.py: Funciones sobre listas (tipos complejos).
 * practicaVIII.py: Pilas, Colas, Diccionarios y Archivos.
+* ejercicios_parcial.py: Integrador programacion imperativa. Ejercicios tipo parcial.
+* tests_ejercicios_parcial.py: Test del archivo de ejercicios_parcial.py.
 
 ## Funciones permitidas en Haskell
 
