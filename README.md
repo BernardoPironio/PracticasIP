@@ -19,6 +19,8 @@ Practicas resueltas para la materia de Introducción a la programación. Las pra
 * practicaVIII.py: Pilas, Colas, Diccionarios y Archivos.
 * ejercicios_parcial.py: Integrador programacion imperativa. Ejercicios tipo parcial.
 * tests_ejercicios_parcial.py: Test del archivo de ejercicios_parcial.py.
+* parcial_python.py: Parcial de python que nos tomaron.
+* reporte.html: Consignas del parcial y resultados. Incluye las preguntas teoricas.
 
 ## Funciones permitidas en Haskell
 
